@@ -1,0 +1,24 @@
+{
+  "name": "vizdados",
+  "version": "1.0.0",
+  "description": "Trabalho final de vizualização de dados de Francisco Neves e Henrique Furst",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FranciscoNevesT/vizdados.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FranciscoNevesT/vizdados/issues"
+  },
+  "homepage": "https://github.com/FranciscoNevesT/vizdados#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+  }
+}
