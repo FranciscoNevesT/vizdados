@@ -27,7 +27,6 @@ mapaRouter.get('/data/distinct/:id', function(req, res, next){
 
     const query = "SELECT DISTINCT " + id + " FROM pos_doc ORDER BY " + id  + " ASC"
 
-    console.log(query)
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -45,7 +44,39 @@ mapaRouter.get('/data/knowledge/:id', function(req, res, next){
 
     const query = "SELECT DISTINCT knowledge_area FROM pos_doc WHERE evaluation_area = '" + id + "'  ORDER BY knowledge_area ASC"
 
-    console.log(query)
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.json(rows);
+
+        }
+    });
+})
+
+mapaRouter.get('/data/research/:evaluation/:knowledge', function(req, res, next){
+    const eval = req.params.evaluation
+    const know = req.params.knowledge
+
+
+
+
+    var query = "SELECT DISTINCT research_line FROM pos_doc WHERE"
+
+    if (eval == 0){
+        query = query + " NOT evaluation_area = -1 AND"
+    }else{
+        query = query + " evaluation_area = '" + eval + "' AND"
+    }
+
+    if (know == 0){
+        query = query + " NOT knowledge_area = -1"
+
+    }else{
+        query = query + " knowledge_area = '" + know + "'"
+    }
+
+    query = query + "  ORDER BY research_line ASC"
 
     db.all(query, (err, rows) => {
         if (err) {
