@@ -58,9 +58,6 @@ mapaRouter.get('/data/research/:evaluation/:knowledge', function(req, res, next)
     const eval = req.params.evaluation
     const know = req.params.knowledge
 
-
-
-
     var query = "SELECT DISTINCT research_line FROM pos_doc WHERE"
 
     if (eval == 0){
@@ -88,6 +85,46 @@ mapaRouter.get('/data/research/:evaluation/:knowledge', function(req, res, next)
     });
 })
 
+mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end', function(req, res, next){
+    const eval = req.params.evaluation
+    const know = req.params.knowledge
+    const rese = req.params.research
+    const level = req.params.level
+
+    const yearStart = req.params.start
+    const yearEnd = req.params.end
+
+
+    var values = [eval,know,rese,level]
+    var name = ['evaluation_area','knowledge_area','research_line','level']
+
+
+    var query = "SELECT DISTINCT id FROM pos_doc WHERE "
+
+    for(let i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            query = query + " NOT " +  name[i] + " = -1 AND "
+
+        }else{
+            query = query + name[i] + " = '"+ values[i]+ "' AND "
+        }
+        
+    }
+
+    query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
+
+    console.log(query)
+
+
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.json(rows);
+
+        }
+    });
+})
 
 
 

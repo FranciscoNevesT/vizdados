@@ -4,8 +4,6 @@ const knowledge = document.getElementById("artKnowledge");
 const research = document.getElementById("artResearch");
 
 
-
-
 async function propageKnowledge(){
   // Clear research select options
     research.innerHTML = '';
