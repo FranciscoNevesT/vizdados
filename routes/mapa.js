@@ -101,7 +101,7 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
     var name = ['evaluation_area','knowledge_area','research_line','level']
 
 
-    var query = "SELECT state, COUNT(*) as count  FROM pos_doc WHERE "
+    var query = "SELECT state, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion   FROM pos_doc WHERE "
 
     for(let i = 0; i < values.length; i++){
         if(values[i] == 0){
