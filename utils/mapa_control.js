@@ -21,8 +21,6 @@ async function propageKnowledge(){
       
       const data = await response.json();
 
-      console.log(data)
-
       for (const item of data) {
         const option = document.createElement('option');
         option.value = item.research_line;
@@ -30,8 +28,6 @@ async function propageKnowledge(){
         research.appendChild(option);
       }
 
-
-      console.log(url)
     } catch (error) {
       console.error(error);
     }

@@ -115,10 +115,7 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
 
     query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
 
-
     query = query + " GROUP BY state"
-    console.log(query)
-
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -130,6 +127,62 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
     });
 })
 
+
+mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:tipo', function(req, res, next){
+    const eval = req.params.evaluation
+    const know = req.params.knowledge
+    const rese = req.params.research
+    const level = req.params.level
+
+    const yearStart = req.params.start
+    const yearEnd = req.params.end
+
+    const tipo = req.params.tipo
+
+
+    var values = [eval,know,rese,level]
+    var name = ['evaluation_area','knowledge_area','research_line','level']
+
+    var tipoSelect = "";
+
+    if(tipo == "ie"){
+        tipoSelect = "institution_acronym "
+    }else if(tipo == "states"){
+        tipoSelect = "state"
+
+    }
+    else{
+        console.log("Erro: " + tipo)
+    }
+
+
+    var query = "SELECT " + tipoSelect + " as label, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion   FROM pos_doc WHERE "
+
+    for(let i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            query = query + " NOT " +  name[i] + " = -1 AND "
+
+        }else{
+            query = query + name[i] + " = '"+ values[i]+ "' AND "
+        }
+        
+    }
+
+    query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
+
+    query = query + " GROUP BY " + tipoSelect +  " ORDER BY count DESC LIMIT 10"
+
+    console.log(query)
+
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.json(rows);
+
+        }
+    });
+})
 
 
 

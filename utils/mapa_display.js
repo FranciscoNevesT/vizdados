@@ -1,5 +1,9 @@
-//Fazendo o mapa
+//Funções para desenhar os graficos
 
+import {display} from './mapa_graficos.js';
+
+
+//Fazendo o mapa
 var map = L.map('map', { zoomControl: false }).setView([-15, -56], 4);
 
 map.dragging.disable();
@@ -94,7 +98,8 @@ function resetHighlight(e) {
 }
 
 
-function zoomToFeature(e) {
+function clickFeature(e) {
+  console.log(e)
   //map.fitBounds(e.target.getBounds());
   console.log("click")
 }
@@ -104,7 +109,7 @@ function onEachFeature(feature, layer) {
   layer.on({
       mouseover: highlightFeature,
       mouseout: resetHighlight,
-      click: zoomToFeature
+      click: clickFeature
   });
 }
 
@@ -164,4 +169,8 @@ const updateMap = async () => {
   }
 };
   
-search.addEventListener("click", updateMap);
+search.addEventListener("click", () =>{
+  updateMap();
+  display();
+
+} );
