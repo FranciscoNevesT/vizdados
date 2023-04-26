@@ -50,3 +50,9 @@ body {
   bottom: 0;
   left: 0;
 }
+
+#map_ranks{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

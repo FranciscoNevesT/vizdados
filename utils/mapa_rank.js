@@ -15,41 +15,58 @@ var margin = {top: 20, right: 30, bottom: 40, left: 90},
     height = 400 - margin.top - margin.bottom;
 
 
-var data = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/ie`);
-var data = await data.json();
+async function rank_display(id,tipo){
 
-var svg  = d3.select("#rank_ie")
-.append('svg')
-.attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform", `translate(${margin.left}, ${margin.top})`);
+  var data = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/` + tipo);
+  var data = await data.json();
 
-const x = d3.scaleLinear()
-.domain([0, 13000])
-.range([ 0, width]);
-svg.append("g")
-.attr("transform", `translate(0, ${height})`)
-.call(d3.axisBottom(x))
-.selectAll("text")
-  .attr("transform", "translate(-10,0)rotate(-45)")
-  .style("text-anchor", "end");
+  console.log(data)
 
-// Y axis
-const y = d3.scaleBand()
-.range([ 0, height ])
-.domain(data.map(d => d.label))
-.padding(.1);
-svg.append("g")
-.call(d3.axisLeft(y))
+  d3.select(id).selectAll('*').remove();
 
-//Bars
-svg.selectAll("myRect")
-.data(data)
-.join("rect")
-.attr("x", x(0) )
-.attr("y", d => y(d.label))
-.attr("width", d => x(d.count))
-.attr("height", y.bandwidth())
+  var svg  = d3.select(id)
+  .append('svg')
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-console.log(data);
+  const x = d3.scaleLinear()
+  .domain([0, 1])
+  .range([ 0, width]);
+  svg.append("g")
+  .attr("transform", `translate(0, ${height})`)
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Y axis
+  const y = d3.scaleBand()
+  .range([ 0, height ])
+  .domain(data.map(d => d.label))
+  .padding(.1);
+  svg.append("g")
+  .call(d3.axisLeft(y))
+
+  //Bars
+  svg.selectAll("myRect")
+  .data(data)
+  .join("rect")
+  .attr("x", x(0) )
+  .attr("y", d => y(d.label))
+  .attr("width", d => x(d.proportion))
+  .attr("height", y.bandwidth())
+
+}
+
+
+search.addEventListener("click", () =>{
+  rank_display("#rank_ie","ie");
+  rank_display("#rank_states","states");
+
+});
+
+
+
+search.click();
