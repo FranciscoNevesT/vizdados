@@ -1,5 +1,4 @@
 //Funções para desenhar os graficos
-
 import {display} from './mapa_graficos.js';
 
 
@@ -51,20 +50,14 @@ let geojson = null;
 
 //Cores dos estados
 function getColor(value) {
+
   var hue = value * 240;
-  var saturation = 75;
+  var saturation = 80;
   var lightness = 50;
 
-  //Faça ficar preto se não tiver nenhum trabalho
-  if(value == 0){
-    saturation = 0;
-    lightness = 0;
 
+  return `hsl( ${hue} ${saturation}% ${lightness}%)`;
   }
-
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
 
 function style(feature) {
   return {
