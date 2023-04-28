@@ -12,8 +12,8 @@ const margin = {top: 20, right: 30, bottom: 40, left: 90};
 const width = 460 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
-async function getRankData(tipo) {
-  const response = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${tipo}`);
+async function getRankData(tipo,state = 0) {
+  const response = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${tipo} `);
   const data = await response.json();
   console.log(data);
   return data;
@@ -55,13 +55,57 @@ function drawRankChart(id, data) {
   svg.append("g")
     .call(d3.axisLeft(y))
 
+  // create a tooltip
+  var Tooltip = d3.select(id)
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+  var mouseover = function(d) {
+    Tooltip
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+  }
+
+  var mousemove = function(d) {
+    const dataD = d.srcElement.__data__
+
+    console.log()
+    Tooltip
+      .html("Trabalhos: " + dataD.count + "<br> Proporção: " + (dataD.proportion* 100).toFixed(2) + "%" )
+      .style("left", (d3.pointer(this)[0]+70) + "px")
+      .style("top", (d3.pointer(this)[1]) + "px")
+  }
+
+
+  var mouseleave = function(d) {
+    Tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+  }
+
   svg.selectAll("myRect")
     .data(data)
     .join("rect")
     .attr("x", x(0))
     .attr("y", d => y(d.label))
     .attr("width", d => x(d.proportion))
-    .attr("height", y.bandwidth());
+    .attr("height", y.bandwidth())
+    .style("stroke-width", 4)
+    .style("stroke", "none")
+    .style("opacity", 0.8)
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave);
 }
 
 search.addEventListener("click", async () => {
@@ -73,4 +117,5 @@ search.addEventListener("click", async () => {
   drawRankChart("#rank_states", statesData);
 });
 
-search.click();
+
+export {getRankData,drawRankChart};

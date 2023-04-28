@@ -127,12 +127,14 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
     });
 })
 
+//Pesquisa de rank
 
-mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:tipo', function(req, res, next){
+mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:state/:tipo', function(req, res, next){
     const eval = req.params.evaluation
     const know = req.params.knowledge
     const rese = req.params.research
     const level = req.params.level
+    const state = req.params.state
 
     const yearStart = req.params.start
     const yearEnd = req.params.end
@@ -140,8 +142,8 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     const tipo = req.params.tipo
 
 
-    var values = [eval,know,rese,level]
-    var name = ['evaluation_area','knowledge_area','research_line','level']
+    var values = [eval,know,rese,level,state]
+    var name = ['evaluation_area','knowledge_area','research_line','level','state']
 
     var tipoSelect = "";
 

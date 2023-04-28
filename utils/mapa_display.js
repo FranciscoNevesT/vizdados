@@ -1,6 +1,4 @@
-//Funções para desenhar os graficos
-import {display} from './mapa_graficos.js';
-
+import {getRankData,drawRankChart} from './mapa_rank.js';
 
 //Fazendo o mapa
 var map = L.map('map', { zoomControl: false }).setView([-15, -56], 4);
@@ -55,6 +53,11 @@ function getColor(value) {
   var saturation = 80;
   var lightness = 50;
 
+  if(value == 0){
+    saturation = 0;
+    lightness = 0;
+  }
+
 
   return `hsl( ${hue} ${saturation}% ${lightness}%)`;
   }
@@ -91,10 +94,12 @@ function resetHighlight(e) {
 }
 
 
-function clickFeature(e) {
-  console.log(e)
-  //map.fitBounds(e.target.getBounds());
-  console.log("click")
+async function clickFeature(e) {
+  const state = e.sourceTarget.feature.properties.name
+
+  const ieData = await getRankData("ie",state)
+
+  drawRankChart("#rank_ie", ieData);
 }
 
 
@@ -164,7 +169,5 @@ const updateMap = async () => {
   
 search.addEventListener("click", () =>{
   updateMap();
-  display();
-
 } );
 
