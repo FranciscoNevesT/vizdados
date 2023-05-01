@@ -1,0 +1,13 @@
+Funcionais:
+    - Séries temporais
+    ( https://d3-graph-gallery.com/ )
+        - Número de trabalhos publicados no país/estado por ano
+        - Número de trabalhos publicados pelas top 3 instituições de pesquisa do país/estado por ano
+
+    - Hospedagem
+
+Design:
+    - Esclarecimento de filtros
+    - Campos numéricos para anos-limite
+    - Títulos nos rankings
+    - Título do eixo x dos rankings (participação da produção do país/estado)
