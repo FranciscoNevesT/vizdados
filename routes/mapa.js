@@ -201,7 +201,7 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
     const name = ['evaluation_area','knowledge_area','research_line','level','state'];
     const whereQuery = name.map((val, i) => {
         if (values[i] != 0) {
-            return val + " = " + values[i];
+            return val + " = '" + values[i] + "'";
         } else {
             return "1 = 1";
         }
