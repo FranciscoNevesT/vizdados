@@ -42,7 +42,7 @@ function drawLineChart(id, data) {
     .range([ 0, width ]);
 	svg.append("g")
 		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x));
+		.call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
 	// Add Y axis
 	var y = d3.scaleLinear()
@@ -67,3 +67,5 @@ search.addEventListener("click", async () => {
   const data = await getLineData();
   drawLineChart("#line_chart", data);
 });
+
+export {getLineData, drawLineChart};

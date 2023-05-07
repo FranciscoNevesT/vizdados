@@ -1,4 +1,5 @@
 import {getRankData,drawRankChart} from './mapa_rank.js';
+import {getLineData,drawLineChart} from './mapa_line.js';
 
 //Fazendo o mapa
 var map = L.map('map', { zoomControl: false }).setView([-15, -56], 4);
@@ -98,8 +99,9 @@ async function clickFeature(e) {
   const state = e.sourceTarget.feature.properties.name
 
   const ieData = await getRankData("ie",state)
-
   drawRankChart("#rank_ie", ieData);
+  const lineData = await getLineData(state)
+  drawLineChart("#line_chart", lineData);
 }
 
 

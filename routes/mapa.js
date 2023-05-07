@@ -197,22 +197,20 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
     const yearStart = req.params.start;
     const yearEnd = req.params.end;
 
-    var values = [eval,know,rese,level,state]
-    var name = ['evaluation_area','knowledge_area','research_line','level','state']
-
+    const values = [eval,know,rese,level,state];
+    const name = ['evaluation_area','knowledge_area','research_line','level','state'];
+    const whereQuery = name.map((val, i) => {
+        if (values[i] != 0) {
+            return val + " = " + values[i];
+        } else {
+            return "1 = 1";
+        }
+    });
 
     var query = "SELECT year, COUNT(*) as count FROM pos_doc WHERE "
 
-    for(let i = 0; i < values.length; i++){
-        if(values[i] == 0){
-            query = query + " NOT " +  name[i] + " = -1 AND "
-
-        }else{
-            query = query + name[i] + " = '"+ values[i]+ "' AND "
-        }
-        
-    }
-    query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
+    query += whereQuery.join(' AND ');
+    query +=  " AND year BETWEEN '" + yearStart + "' AND '" + yearEnd + "'";
     query = query + " GROUP BY year ORDER BY year ASC"
 
     console.log(query)
