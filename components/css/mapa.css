@@ -1,55 +1,70 @@
+/* Estilos para as legendas */
 .legend {
   line-height: 18px;
   color: #555;
-}
-.legend i {
-  width: 18px;
-  height: 18px;
-  float: left;
-  margin-right: 8px;
-  opacity: 0.7;
+  margin-bottom: 10px;
 }
 
+.legend i {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+/* Estilos para o seletor de ano */
 .year-slider {
   margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.year-slider label {
+  margin-right: 10px;
 }
 
 .year-slider input {
-  width: 100px;
+  width: 80px;
   margin-right: 10px;
 }
 
 #year-range {
-  display: inline-block;
   font-weight: bold;
-  margin-left: 10px;
 }
 
 
+
+/* Estilos para as informações */
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
-  background: white;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
+  margin-bottom: 10px;
 }
+
 .info h4 {
   margin: 0 0 5px;
   color: #777;
 }
 
 
+/* Estilos para o corpo da página */
 body {
-  height: 100%;
-  width: 100%;
   margin: 0;
   padding: 0;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
 }
 
+/* Estilos para o mapa - Não mexer */
 #map {
-  height: 400px;
+  height: 450px;
   margin-bottom: 20px;
   width: 30%;
   position: relative;
@@ -57,6 +72,7 @@ body {
   left: 0;
 }
 
+/* Estilos para o contêiner dos rankings - Não mexer */
 #map_ranks{
   display: flex;
   flex-direction: row;
@@ -64,6 +80,7 @@ body {
   margin-top: 40px;
 }
 
+/* Estilos para os contêineres */
 .container {
   margin-top: 20px;
 }
@@ -72,13 +89,27 @@ body {
   margin-bottom: 10px;
 }
 
+/* Estilos para o botão de pesquisa */
 #search {
   margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search:hover {
+  background-color: #0056b3;
 }
 
 .chart {
   height: 200px;
   margin-bottom: 20px;
+  
 }
 
 .line {
