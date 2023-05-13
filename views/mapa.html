@@ -1,98 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Pós graduação mapa</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-        <!-- Leaflet CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
-        <link rel="stylesheet" href="../components/css/mapa.css"/>
-    
-        <!-- Leaflet JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pós graduação mapa</title>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+<link rel="stylesheet" href="../components/css/mapa.css"/>
 
-
-      </head>
+<!-- Leaflet JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>>
+</head>
 <body>
 
   <div class="container">
-      
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="artEvaluation"> Avaliação </label>
-      </div>
+    <div class="input-group">
+      <label class="input-group-label" for="artEvaluation">Avaliação:</label>
       <select class="custom-select" id="artEvaluation">
         <option value="0">ALL</option>
       </select>
     </div>
-
   </div>
 
-    <div class="container">
-      
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="artKnowledge"> Conhecimento </label>
-        </div>
-        <select class="custom-select" id="artKnowledge">
-          <option value="0">ALL</option>
-        </select>
-      </div>
-
+  <div class="container">
+    <div class="input-group">
+      <label class="input-group-label" for="artKnowledge">Conhecimento:</label>
+      <select class="custom-select" id="artKnowledge">
+        <option value="0">ALL</option>
+      </select>
     </div>
-    
+  </div>
 
-    
-    <div class="container">
-      
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="artResearch"> Linha de pesquisa </label>
-        </div>
-        <select class="custom-select" id="artResearch">
-          <option value="0">ALL</option>
-        </select>
-      </div>
-
+  <div class="container">
+    <div class="input-group">
+      <label class="input-group-label" for="artResearch">Linha de pesquisa:</label>
+      <select class="custom-select" id="artResearch">
+        <option value="0">ALL</option>
+      </select>
     </div>
+  </div>
 
-    <div class="container">
-      
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="artLevel"> Nivel </label>
-        </div>
-        <select class="custom-select" id="artLevel">
-          <option value="0">ALL</option>
-        </select>
-      </div>
-
+  <div class="container">
+    <div class="input-group">
+      <label class="input-group-label" for="artLevel">Nível:</label>
+      <select class="custom-select" id="artLevel">
+        <option value="0">ALL</option>
+      </select>
     </div>
+  </div>
 
-    <div class="year-slider">
-      <input type="number" id="start-year" placeholder="Select a year" min="1980" max="2020" step="1" value = "1980">
-      
-      <input type="number" id="end-year" placeholder="Select a year" min="1980" max="2020" step="1" value = "2023">
-      <div id="year-range"></div>
-    </div>
+  <div class="year-slider">
+    <label for="start-year">Ano inicial:</label>
+    <input type="number" id="start-year" placeholder="Select a year" min="1980" max="2020" step="1" value="1980">
+    <label for="end-year">Ano final:</label>
+    <input type="number" id="end-year" placeholder="Select a year" min="1980" max="2020" step="1" value="2023">
+    <div id="year-range"></div>
+  </div>
 
+  <button id="search" class="btn btn-primary">Search</button>
 
-    <button id="search" class="btn btn-primary" >Search</button>
-    <div id="map_ranks" class="container">
-      <div id="map"></div>
+  <div id="map_ranks" class="container">
+    <div id="map"></div>
+    <div id="rank_ie" class="chart"></div>
+    <div id="rank_states" class="chart"></div>
+  </div>
 
-      <div class="chart" id="rank_ie"></div>
+  <div id="line_chart" class="line"></div>
 
-      <div class="chart" id="rank_states"></div>
-
-    </div>
-  <div class="line" id="line_chart"></div>
-
-    <script type="module" src="../utils/mapa_control.js"></script>
-    <script type="module" src="../utils/mapa_display.js"></script>
-    <script type="module" src="../utils/mapa_rank.js"></script>
-    <script type="module" src="../utils/mapa_line.js"></script>
+  <script type="module" src="../utils/mapa_control.js"></script>
+  <script type="module" src="../utils/mapa_display.js"></script>
+  <script type="module" src="../utils/mapa_rank.js"></script>
+  <script type="module" src="../utils/mapa_line.js"></script>
 
 </body>
 </html>

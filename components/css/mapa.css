@@ -11,15 +11,20 @@
 }
 
 .year-slider {
-  display: flex;
-  flex-direction: column;
+  margin: 20px 0;
+}
+
+.year-slider input {
+  width: 100px;
+  margin-right: 10px;
 }
 
 #year-range {
-  margin-top: 1rem;
-  font-size: 1.2rem;
+  display: inline-block;
   font-weight: bold;
+  margin-left: 10px;
 }
+
 
 .info {
   padding: 6px 8px;
@@ -44,7 +49,8 @@ body {
 }
 
 #map {
-  height: 525px;
+  height: 400px;
+  margin-bottom: 20px;
   width: 30%;
   position: relative;
   bottom: 0;
@@ -55,4 +61,27 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 40px;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+#search {
+  margin-top: 20px;
+}
+
+.chart {
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.line {
+  height: 300px;
+  margin-top: 40px;
 }
