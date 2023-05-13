@@ -38,6 +38,31 @@ function drawRankChart(id, data) {
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+
+  var title = "Rank de "
+
+  console.log(id)
+  if(id == "#rank_ie"){
+    title += "intituições"
+  }
+  else{
+    title += "estados"
+  }
+
+  //Adding title
+  svg.append("text")
+  .attr("class", "graph-title")
+  .attr("x", width / 2)
+  .attr("y", -margin.top / 2)
+  .attr("text-anchor", "middle")
+  .text(title);
+
+  svg.select(".graph-title")
+  .attr("font-size", "16px")
+  .attr("font-weight", "bold");
+
+
+  
   const x = d3.scaleLinear()
     .domain([0, max])
     .range([0, width]);
@@ -47,6 +72,18 @@ function drawRankChart(id, data) {
     .selectAll("text")
       .attr("transform", "translate(-10,0)rotate(-45)")
       .style("text-anchor", "end");
+
+  // Add x-axis label
+  svg.append("text")
+  .attr("class", "x-label")
+  .attr("x", width / 2)
+  .attr("y", height + margin.bottom - 5)
+  .attr("text-anchor", "middle")
+  .text("Proporção de trabalhos");
+
+  // Style the x-axis label
+  svg.select(".x-label")
+  .attr("font-size", "16px");
 
   const y = d3.scaleBand()
     .range([0, height])
