@@ -127,6 +127,7 @@ body {
   padding: 10px;
   border-radius: 5px 0 0 5px;
   z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .tab-button {
@@ -135,6 +136,13 @@ body {
   color: #000;
   padding: 8px 12px;
   cursor: pointer;
+  border-radius: 3px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button:hover {
+  background-color: #bbb;
 }
 
 .filter-options {
@@ -144,4 +152,19 @@ body {
 
 .filter-options.show {
   display: block;
+}
+
+
+/*Customizando opções*/
+.custom-select {
+  position: relative;
+  width: 200px;
+}
+
+.custom-select select {
+  width: 100%;
+}
+
+.custom-select option {
+  word-wrap: break-word;
 }
