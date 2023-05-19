@@ -116,3 +116,32 @@ body {
   height: 300px;
   margin-top: 40px;
 }
+
+/*Filter tab */
+.filter-tab {
+  position: fixed;
+  top: 1%;
+  right: 0;
+  transform: translateY(0%);
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  z-index: 9999;
+}
+
+.tab-button {
+  background-color: #ccc;
+  border: none;
+  color: #000;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.filter-options {
+  display: none;
+  margin-top: 10px;
+}
+
+.filter-options.show {
+  display: block;
+}

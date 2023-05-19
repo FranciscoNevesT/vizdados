@@ -149,3 +149,18 @@ endYear.addEventListener('input', function() {
   });
 
 updateYearRange();
+
+
+/*Filter tab*/
+
+const filter_button = document.getElementById("tab_button");
+
+function toggleFilters() {
+  var filterOptions = document.querySelector('.filter-options');
+  filterOptions.classList.toggle('show');
+}
+
+filter_button.addEventListener("click", async () => {
+  toggleFilters();
+});
+
