@@ -154,6 +154,29 @@ body {
   display: block;
 }
 
+/*Config tab */
+.config-tab {
+  position: fixed;
+  top: 8%;
+  right: 0;
+  transform: translateY(0%);
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.config-options {
+  display: none;
+  margin-top: 10px;
+}
+
+.config-options.show {
+  display: block;
+}
+
 
 /*Customizando opções*/
 .custom-select {
@@ -167,4 +190,26 @@ body {
 
 .custom-select option {
   word-wrap: break-word;
+}
+
+/* Hide the default checkbox appearance */
+input[type="checkbox"] {
+  display: none;
+}
+
+/* Style the custom checkbox */
+input[type="checkbox"] + label:before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  margin-right: 5px;
+  vertical-align: middle;
+  background-color: #fff;
+}
+
+/* Style the custom checkbox when checked */
+input[type="checkbox"]:checked + label:before {
+  background-color: #007bff;
 }

@@ -153,7 +153,7 @@ updateYearRange();
 
 /*Filter tab*/
 
-const filter_button = document.getElementById("tab_button");
+const filter_button = document.getElementById("tab_filter");
 
 function toggleFilters() {
   var filterOptions = document.querySelector('.filter-options');
@@ -164,3 +164,16 @@ filter_button.addEventListener("click", async () => {
   toggleFilters();
 });
 
+
+/* Config tab*/
+
+const config_button = document.getElementById("tab_config");
+
+function toggleConfigs() {
+  var configOptions = document.querySelector('.config-options');
+  configOptions.classList.toggle('show');
+}
+
+config_button.addEventListener("click", async () => {
+  toggleConfigs();
+});

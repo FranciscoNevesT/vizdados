@@ -61,11 +61,48 @@ function drawLineChart(id, data) {
 			.x(function(d) { return x(d.year) })
 			.y(function(d) { return y(d.count) })
 			)   
+
+	// Draw the point bullets
+	svg.selectAll(".point")
+	.data(data)
+	.enter()
+	.append("circle")
+	.attr("class", "point")
+	.attr("cx", d => x(d.year))
+	.attr("cy", d => y(d.count))
+	.attr("r", 4);
 }
 
+async function update(){
+	const data = await getLineData();
+
+	if(relative_line.checked){
+	var pre = 0
+	for(let i = 0; i<data.length; i++){
+	  if(pre == 0){
+		  pre = data[i].count
+		  data[i].count = 0
+	  }
+	  else{
+	  var s = data[i].count
+	  data[i].count = s/pre
+	  pre = s}
+  
+	}}
+	console.log(data.length)
+	console.log(data[0])
+	console.log(data)
+	drawLineChart("#line_chart", data);
+}
+
+const relative_line = document.getElementById("relative_line")
+
 search.addEventListener("click", async () => {
-  const data = await getLineData();
-  drawLineChart("#line_chart", data);
+	update()
+});
+
+relative_line.addEventListener("click", async () => {
+	update()
 });
 
 export {getLineData, drawLineChart};
