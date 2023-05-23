@@ -114,7 +114,6 @@ function drawRankChart(id, data) {
   var mousemove = function(d) {
     const dataD = d.srcElement.__data__
 
-    console.log()
     Tooltip
       .html("Trabalhos: " + dataD.count + "<br> Proporção: " + (dataD.proportion* 100).toFixed(2) + "%" )
       .style("left", (d3.pointer(this)[0]+70) + "px")

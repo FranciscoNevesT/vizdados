@@ -70,7 +70,51 @@ function drawLineChart(id, data) {
 	.attr("class", "point")
 	.attr("cx", d => x(d.year))
 	.attr("cy", d => y(d.count))
-	.attr("r", 4);
+	.attr("r", 4)
+	.on("mouseover", mouseover)
+	.on("mouseout", mouseleave);
+
+	// Function to show the tooltip
+
+	var Tooltip = d3.select(id)
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+	function mouseover(d) {
+		Tooltip.style("opacity", 1);
+
+		d3.select(this)
+		  .style("stroke", "black")
+		  .style("opacity", 1);
+	  
+		const dataD = d.toElement.__data__;
+	  
+		var value = dataD.count;
+	  
+		if (relative_line.checked) {
+		  value = (value * 100).toFixed(2);
+		}
+	  
+		Tooltip
+		  .html("Count: " + value)
+		  .style("left", (d3.pointer(this)[0] + 70) + "px")
+		  .style("top", (d3.pointer(this)[1] + margin.top + 10) + "px");
+	}
+
+	function mouseleave() {
+		Tooltip
+		.style("opacity", 0)
+	  d3.select(this)
+		.style("stroke", "none")
+		.style("opacity", 0.8)
+	}
+
 }
 
 async function update(){
