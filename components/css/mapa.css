@@ -34,8 +34,6 @@
   font-weight: bold;
 }
 
-
-
 /* Estilos para as informações */
 .info {
   padding: 6px 8px;
@@ -50,7 +48,6 @@
   margin: 0 0 5px;
   color: #777;
 }
-
 
 /* Estilos para o corpo da página */
 body {
@@ -73,7 +70,7 @@ body {
 }
 
 /* Estilos para o contêiner dos rankings - Não mexer */
-#map_ranks{
+#map_ranks {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -107,17 +104,17 @@ body {
 }
 
 .chart {
-  height: 200px;
-  margin-bottom: 20px;
-  
+  border: 1px solid #ddd;
+  padding: 10px;
 }
 
 .line {
-  height: 300px;
-  margin-top: 40px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
 }
 
-/*Filter tab */
+/* Filter tab */
 .filter-tab {
   position: fixed;
   top: 1%;
@@ -154,7 +151,7 @@ body {
   display: block;
 }
 
-/*Config tab */
+/* Config tab */
 .config-tab {
   position: fixed;
   top: 8%;
@@ -167,7 +164,6 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-
 .config-options {
   display: none;
   margin-top: 10px;
@@ -177,8 +173,7 @@ body {
   display: block;
 }
 
-
-/*Customizando opções*/
+/* Customizando opções */
 .custom-select {
   position: relative;
   width: 200px;
@@ -212,4 +207,11 @@ input[type="checkbox"] + label:before {
 /* Style the custom checkbox when checked */
 input[type="checkbox"]:checked + label:before {
   background-color: #007bff;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  gap: 20px;
 }
