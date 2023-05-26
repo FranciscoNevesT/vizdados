@@ -50,8 +50,24 @@ let geojson = null;
 //Cores dos estados
 function getColor(value) {
 
-  var hue = value * 240;
-  var saturation = 80;
+  var threshold = 1/10
+
+  if(value > threshold){
+    return "#3CB043"
+  }
+  else if( value > threshold / 2){
+    var hue = 240
+  }else{
+    var hue = 0
+  }
+
+  var saturation = (value - threshold/2)*(value - threshold/2);
+  saturation *= 4/(threshold*threshold)
+  saturation = saturation * 100
+  console.log(threshold)
+  console.log(saturation)
+  console.log( (value - threshold))
+  console.log("A")
   var lightness = 50;
 
   if(value == 0){
