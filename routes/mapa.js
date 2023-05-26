@@ -21,59 +21,50 @@ mapaRouter.get("", async function(req, res, next){
     res.render(path.resolve(__dirname, "../views/mapa.html"));
 })
 
+
+mapaRouter.get('/data/triples/:evaluation/:knowledge/:research', function(req, res, next){
+
+    var query =`Select e.name as evaluation_area, k.name as knowledge_area, l.name as research_line
+    FROM evaluation_area_knowledge_area_research_line as ekl 
+    INNER JOIN evaluation_area as e on ekl.evaluation_area_id = e.id
+    INNER JOIN knowledge_area as k on ekl.knowledge_area_id = k.id
+    INNER JOIN research_line as l on ekl.research_line_id = l.id
+    `
+    
+    
+    const values = [req.params.evaluation,req.params.knowledge,req.params.research]
+    const names = ["evaluation_area","knowledge_area","research_line"]
+
+    var first = true
+    for(var i = 0; i < names.length; i++){
+        if(values[i] != 0){
+            if(first){
+                query += " WHERE  "
+            }else{
+                query += " AND "
+            }
+            query += names[i] + " = '" + values[i] + "'"
+            first = false
+        }
+
+    }
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.json(rows);
+
+        }
+    });
+
+})
+
 mapaRouter.get('/data/distinct/:id', function(req, res, next){
 
     const id =req.params.id
 
-    const query = "SELECT DISTINCT " + id + " FROM pos_doc ORDER BY " + id  + " ASC"
+    const query = "SELECT DISTINCT NAME FROM " + id + " ORDER BY name ASC "
 
-
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            res.json(rows);
-
-        }
-    });
-})
-
-mapaRouter.get('/data/knowledge/:id', function(req, res, next){
-
-    const id =req.params.id
-
-    const query = "SELECT DISTINCT knowledge_area FROM pos_doc WHERE evaluation_area = '" + id + "'  ORDER BY knowledge_area ASC"
-
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            res.json(rows);
-
-        }
-    });
-})
-
-mapaRouter.get('/data/research/:evaluation/:knowledge', function(req, res, next){
-    const eval = req.params.evaluation
-    const know = req.params.knowledge
-
-    var query = "SELECT DISTINCT research_line FROM pos_doc WHERE"
-
-    if (eval == 0){
-        query = query + " NOT evaluation_area = -1 AND"
-    }else{
-        query = query + " evaluation_area = '" + eval + "' AND"
-    }
-
-    if (know == 0){
-        query = query + " NOT knowledge_area = -1"
-
-    }else{
-        query = query + " knowledge_area = '" + know + "'"
-    }
-
-    query = query + "  ORDER BY research_line ASC"
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -99,23 +90,40 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
 
     var values = [eval,know,rese,level]
     var name = ['evaluation_area','knowledge_area','research_line','level']
+    var name_s = ["e","k","r","l"]
+
+    var query =`SELECT s.name as state , COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion
+    FROM pos_doc as pd
+    INNER JOIN pos_doc_state as pds ON pd.id = pds.pos_doc_id
+    INNER JOIN state as s ON s.id = pds.state_id
+    `
+    
 
 
-    var query = "SELECT state, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion   FROM pos_doc WHERE "
-
-    for(let i = 0; i < values.length; i++){
+    for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
-            query = query + " NOT " +  name[i] + " = -1 AND "
+            continue
+        }
+        var pd_s = "pd" + name_s[i]
+        query += " INNER JOIN pos_doc_" + name[i] + " as " + pd_s + " ON pd.id = " + pd_s + ".pos_doc_id"
+        query += "\n"
+        query += " INNER JOIN " + name[i] + " as " + name_s[i] + " ON " + pd_s + "." + name[i] + "_id = " + name_s[i] + ".id" 
+        query += "\n"
 
-        }else{
-            query = query + name[i] + " = '"+ values[i]+ "' AND "
+    }
+
+    query += " WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
+
+    for(var i = 0; i < values.length; i++){
+        if(values[i] != 0){
+            query += "\n"
+            query += " AND " + name_s[i] + ".name = '" +  values[i] + "'"
         }
         
     }
+    query += "\n"
 
-    query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
-
-    query = query + " GROUP BY state"
+    query += " GROUP BY s.name"
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -148,31 +156,43 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     var tipoSelect = "";
 
     if(tipo == "ie"){
-        tipoSelect = "institution_acronym "
+        tipoSelect = "institution"
     }else if(tipo == "states"){
         tipoSelect = "state"
-
-    }
-    else{
+    }else{
         console.log("Erro: " + tipo)
     }
 
+    var query = "SELECT " + tipoSelect + ".name as label, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n" 
 
-    var query = "SELECT " + tipoSelect + " as label, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion   FROM pos_doc WHERE "
+    query += "FROM pos_doc as pd\n"
+    query += "INNER JOIN pos_doc_" + tipoSelect + " on pos_doc_" + tipoSelect + ".pos_doc_id = pd.id\n"
+    query += "INNER JOIN " + tipoSelect + " on pos_doc_" + tipoSelect + "." + tipoSelect + "_id = " + tipoSelect + ".id\n"
 
-    for(let i = 0; i < values.length; i++){
+    for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
-            query = query + " NOT " +  name[i] + " = -1 AND "
-
-        }else{
-            query = query + name[i] + " = '"+ values[i]+ "' AND "
+            continue
         }
-        
+        query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
+        query += "\n"
+        query += " INNER JOIN " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
+        query += "\n"
+
     }
 
-    query = query + " defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
 
-    query = query + " GROUP BY " + tipoSelect +  " ORDER BY count DESC LIMIT 10"
+    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'\n";
+
+    for(var i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            continue
+        }
+        query += " AND " + name[i] + ".name = '" + values[i] + "'"
+        query += "\n"
+
+    }
+
+    query += " GROUP BY " + tipoSelect +  ".name ORDER BY count DESC LIMIT 10\n"
 
     console.log(query)
 
@@ -199,18 +219,34 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
 
     const values = [eval,know,rese,level,state];
     const name = ['evaluation_area','knowledge_area','research_line','level','state'];
-    const whereQuery = name.map((val, i) => {
-        if (values[i] != 0) {
-            return val + " = '" + values[i] + "'";
-        } else {
-            return "1 = 1";
+
+    var query = "SELECT year , COUNT(*) as count\n"
+    query += "FROM pos_doc as pd\n"
+
+    for(var i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            continue
         }
-    });
+        query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
+        query += "\n"
+        query += " INNER JOIN " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
+        query += "\n"
 
-    var query = "SELECT year, COUNT(*) as count FROM pos_doc WHERE "
+    }
 
-    query += whereQuery.join(' AND ');
-    query +=  " AND year BETWEEN '" + yearStart + "' AND '" + yearEnd + "'";
+    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'\n";
+
+    
+    for(var i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            continue
+        }
+        query += " AND " + name[i] + ".name = '" + values[i] + "'"
+        query += "\n"
+
+    }
+
+
     query = query + " GROUP BY year ORDER BY year ASC"
 
     console.log(query)

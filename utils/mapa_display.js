@@ -135,6 +135,7 @@ const updateMap = async () => {
 
     const response = await fetch(`/data/search/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}`);
     const data = await response.json();
+    console.log(data)
     const brasilJson = await fetchBrasilJson();
 
     const statesData = {"type":"FeatureCollection", "features": []};

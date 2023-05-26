@@ -15,6 +15,7 @@ const height = 400 - margin.top - margin.bottom;
 async function getRankData(tipo,state = 0) {
   const response = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${tipo} `);
   const data = await response.json();
+  console.log("oi")
   console.log(data);
   return data;
 }
