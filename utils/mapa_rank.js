@@ -117,9 +117,9 @@ async function drawRankChart(id, data) {
 
   var mousemove = function(d) {
     const dataD = d.srcElement.__data__
-
+    
     Tooltip
-      .html("Trabalhos: " + dataD.count + "<br> Proporção: " + (dataD.proportion* 100).toFixed(2) + "%" )
+      .html("Trabalhos: " + dataD.count + "<br> Proporção: " + (dataD.proportion* 100).toFixed(2) + "%" + "<br> Label: " + dataD.label )
       .style("left", (d3.pointer(this)[0]+70) + "px")
       .style("top", (d3.pointer(this)[1]) + "px")
   }
