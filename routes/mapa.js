@@ -159,6 +159,8 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
         tipoSelect = "institution"
     }else if(tipo == "states"){
         tipoSelect = "state"
+    }else if(tipo == "advisor"){
+        tipoSelect = "advisor"
     }else{
         console.log("Erro: " + tipo)
     }
@@ -181,7 +183,7 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     }
 
 
-    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'\n";
+    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31' AND " + tipoSelect + ".name != 'NAN'\n";
 
     for(var i = 0; i < values.length; i++){
         if(values[i] == 0){

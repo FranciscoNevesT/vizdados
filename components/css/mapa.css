@@ -77,6 +77,13 @@ body {
   margin-top: 40px;
 }
 
+#ranks{
+  
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}
+
 /* Estilos para os contêineres */
 .container {
   margin-top: 20px;

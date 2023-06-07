@@ -20,7 +20,7 @@ async function getRankData(tipo,state = 0) {
   return data;
 }
 
-function drawRankChart(id, data) {
+async function drawRankChart(id, data) {
   d3.select(id).selectAll('*').remove();
 
   let max = -Infinity;
@@ -45,6 +45,9 @@ function drawRankChart(id, data) {
   console.log(id)
   if(id == "#rank_ie"){
     title += "intituições"
+  }
+  else if(id == "#rank_advisor"){
+    title += "orientadores"
   }
   else{
     title += "estados"
@@ -146,12 +149,14 @@ function drawRankChart(id, data) {
 }
 
 search.addEventListener("click", async () => {
-  const [ieData, statesData] = await Promise.all([
+  const [ieData, statesData,advisorData] = await Promise.all([
     getRankData('ie'),
     getRankData('states'),
+    getRankData('advisor'),
   ]);
   drawRankChart("#rank_ie", ieData);
   drawRankChart("#rank_states", statesData);
+  drawRankChart("#rank_advisor", advisorData);
 });
 
 

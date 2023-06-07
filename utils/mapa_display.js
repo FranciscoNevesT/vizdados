@@ -115,8 +115,10 @@ async function clickFeature(e) {
   const state = e.sourceTarget.feature.properties.name
 
   const ieData = await getRankData("ie",state)
+  const advisorData = await getRankData("advisor",state)
+  const lineData = await getLineData(state);
   drawRankChart("#rank_ie", ieData);
-  const lineData = await getLineData(state)
+  drawRankChart("#rank_advisor", advisorData);
   drawLineChart("#line_chart", lineData);
 }
 
@@ -186,7 +188,7 @@ const updateMap = async () => {
   }
 };
   
-search.addEventListener("click", () =>{
+search.addEventListener("click", async () =>{
   updateMap();
 } );
 
