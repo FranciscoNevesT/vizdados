@@ -262,4 +262,62 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
     });
 })
 
+//Pesquisa de keywords
+
+mapaRouter.get('/data/keyword/:evaluation/:knowledge/:research/:level/:start/:end/:state', function(req, res, next){
+    const eval = req.params.evaluation;
+    const know = req.params.knowledge;
+    const rese = req.params.research;
+    const level = req.params.level;
+    const state = req.params.state;
+
+    const yearStart = req.params.start;
+    const yearEnd = req.params.end;
+
+    const values = [eval,know,rese,level,state];
+    const name = ['evaluation_area','knowledge_area','research_line','level','state'];
+
+    var query = "SELECT keyword.name as word , COUNT(*) as count\n"
+    query += "FROM pos_doc as pd\n"
+    query += " INNER JOIN pos_doc_keyword ON pos_doc_keyword.pos_doc_id = pd.id\n"
+    query += " INNER JOIN keyword ON pos_doc_keyword.keyword_id = keyword.id\n"
+
+
+    for(var i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            continue
+        }
+        query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
+        query += "\n"
+        query += " INNER JOIN " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
+        query += "\n"
+
+    }
+
+    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'\n";
+
+    
+    for(var i = 0; i < values.length; i++){
+        if(values[i] == 0){
+            continue
+        }
+        query += " AND " + name[i] + ".name = '" + values[i] + "'"
+        query += "\n"
+
+    }
+
+
+    query = query + " GROUP BY pos_doc_keyword.keyword_id ORDER BY count DESC LIMIT 100"
+
+    console.log(query)
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.json(rows);
+        }
+    });
+})
+
+
 module.exports = mapaRouter;

@@ -6,13 +6,30 @@ const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
 
+//Read the data
+async function getKeywordData(state = 0) {
+    const response = await fetch(`/data/keyword/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}`);
+    const data = await response.json();
+      console.log('keyword data:\n\n');
+    console.log(data);
+    return data;
+  }
 
-function drawWordClound(){
-    // Cleanup to make room for next linechart
+
+async function drawWordClound(){
+    // Cleanup to make room for next cloud
     d3.select("#wordcloud").selectAll('*').remove();
-
     // List of words
-    var myWords = [{word: "Running", size: "10"}, {word: "Surfing", size: "20"}, {word: "Climbing", size: "50"}, {word: "Kiting", size: "30"}, {word: "Sailing", size: "20"}, {word: "Snowboarding", size: "50.5"} ]
+    var myWords = await getKeywordData();
+
+    var num_words = 0
+    for(let i in myWords){
+        num_words = num_words + myWords[i].count
+    }
+
+    for(let i in myWords){
+        myWords[i].size = myWords[i].count / num_words * 1000
+    }
 
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 10, bottom: 10, left: 10},
