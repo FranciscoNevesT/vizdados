@@ -307,7 +307,7 @@ mapaRouter.get('/data/keyword/:evaluation/:knowledge/:research/:level/:start/:en
     }
 
 
-    query = query + " GROUP BY pos_doc_keyword.keyword_id ORDER BY count DESC LIMIT 100"
+    query = query + " GROUP BY pos_doc_keyword.keyword_id ORDER BY count DESC LIMIT 400"
 
     console.log(query)
     db.all(query, (err, rows) => {

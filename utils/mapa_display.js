@@ -1,5 +1,6 @@
 import {getRankData,drawRankChart} from './mapa_rank.js';
 import {getLineData,drawLineChart} from './mapa_line.js';
+import {getKeywordData, drawWordCloud} from './mapa_wordcloud.js';
 
 //Fazendo o mapa
 var map = L.map('map', { zoomControl: false }).setView([-15, -54], 4);
@@ -117,9 +118,11 @@ async function clickFeature(e) {
   const ieData = await getRankData("ie",state)
   const advisorData = await getRankData("advisor",state)
   const lineData = await getLineData(state);
+  const keywordData = await getKeywordData(state);
   drawRankChart("#rank_ie", ieData);
   drawRankChart("#rank_advisor", advisorData);
   drawLineChart("#line_chart", lineData);
+  drawWordCloud("#wordcloud", keywordData);
 }
 
 
