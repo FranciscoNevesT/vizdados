@@ -77,7 +77,12 @@
     </div>
 
     <div id="map_ranks" class="container">
-      <div id="map" class="chart"></div>
+
+      <div id="map_cloud" class="container">
+        <div id="map" class="chart"></div>
+        <div id="wordcloud"></div>
+      </div>
+      
 
       <div id="ranks" class="container">
 
@@ -89,11 +94,18 @@
     </div>
 
     
+    
   </div>
 
   <script type="module" src="../utils/mapa_control.js"></script>
   <script type="module" src="../utils/mapa_display.js"></script>
   <script type="module" src="../utils/mapa_rank.js"></script>
   <script type="module" src="../utils/mapa_line.js"></script>
+  <script type="module" src="../utils/mapa_wordcloud.js"></script>
+  <!-- Load d3.js -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+
+  <!-- Load d3-cloud -->
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
 </body>
 </html>

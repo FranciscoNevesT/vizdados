@@ -2,7 +2,7 @@ import {getRankData,drawRankChart} from './mapa_rank.js';
 import {getLineData,drawLineChart} from './mapa_line.js';
 
 //Fazendo o mapa
-var map = L.map('map', { zoomControl: false }).setView([-15, -56], 4);
+var map = L.map('map', { zoomControl: false }).setView([-15, -54], 4);
 
 map.dragging.disable();
 map.boxZoom.disable();

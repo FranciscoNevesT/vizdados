@@ -208,6 +208,7 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     });
 })
 
+//Pesquisa de line chart
 
 mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:state', function(req, res, next){
     const eval = req.params.evaluation;
