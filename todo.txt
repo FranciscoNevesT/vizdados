@@ -11,3 +11,11 @@ Design:
     - Campos numéricos para anos-limite
     - Títulos nos rankings
     - Título do eixo x dos rankings (participação da produção do país/estado)
+
+Perguntas:
+    - Quais são os estados com mais trabalhos? (Feito)
+    - Quais são as instituições de ensino com mais trabalhos? (Feito)
+    - Quais são os orientadores que orientaram mais trabalhos? (Feito)
+    - Quais são as keywords mais presentes em um grupo de trabalhos?
+    - Qual é o relacionamento entre os trabalhos?
+    - Dado um orientador, quais as areas/ext que ele mais orientou?
