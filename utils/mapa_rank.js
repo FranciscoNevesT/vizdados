@@ -8,7 +8,7 @@ const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
 
-const margin = {top: 20, right: 30, bottom: 40, left: 90};
+const margin = {top: 30, right: 30, bottom: 50, left: 90};
 const width = 460 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
