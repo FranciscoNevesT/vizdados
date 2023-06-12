@@ -46,13 +46,13 @@ info.update = function (props) {
 
 info.addTo(map);
 
+
 let geojson = null;
+
+var threshold = 1/10
 
 //Cores dos estados
 function getColor(value) {
-
-  var threshold = 1/10
-
   if(value > threshold){
     return "#3CB043"
   }
@@ -65,16 +65,7 @@ function getColor(value) {
   var saturation = (value - threshold/2)*(value - threshold/2);
   saturation *= 4/(threshold*threshold)
   saturation = saturation * 100
-  console.log(threshold)
-  console.log(saturation)
-  console.log( (value - threshold))
-  console.log("A")
   var lightness = 50;
-
-  if(value == 0){
-    saturation = 0;
-    lightness = 0;
-  }
 
 
   return `hsl( ${hue} ${saturation}% ${lightness}%)`;
@@ -195,3 +186,30 @@ search.addEventListener("click", async () =>{
   updateMap();
 } );
 
+var scale = L.control();
+
+scale.onAdd = function (map) {
+  this._div = L.DomUtil.create('div', 'scalebar'); // create a div with a class "scalebar"
+  this.update();
+  return this._div;
+};
+
+scale.update = function (props) {
+  this._div.innerHTML = `
+  
+  <div class="color-square green-square"></div>
+  <div class="square-text">Acima de 10%</div>
+  <div class="color-bar">
+  <div class="mark" style="left: 25%;"></div>
+  <div class="mark" style="left: 50%;"></div>
+  <div class="mark" style="left: 75%;"></div>
+  <div class="mark" style="left: 100%;"></div>
+  <div class="mark-label" style="left: 25%;">2.5%</div>
+  <div class="mark-label" style="left: 50%;">5%</div>
+  <div class="mark-label" style="left: 75%;">7.5%</div>
+  <div class="mark-label" style="left: 100%;">10%</div>
+  </div>
+  `;
+};
+
+scale.addTo(map);

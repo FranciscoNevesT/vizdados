@@ -231,3 +231,54 @@ input[type="checkbox"]:checked + label:before {
   justify-content: space-between;
   margin-top: 40px;
 }
+
+.scalebar {
+  position: absolute;
+  top: 370px;
+  left: 50px;
+  z-index: 9999;
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-bar {
+  position: relative;
+  width: 150px;
+  height: 20px;
+  background: linear-gradient(to right, hsl(0, 100%, 50%), white 50%, hsl(240, 100%, 50%));
+}
+
+.mark {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.mark-label {
+  position: absolute;
+  font-size: 12px;
+  top: 100%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.color-square {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-top: 5px;
+  vertical-align: middle;
+}
+
+
+.green-square {
+  background-color: #3CB043;
+}
+.square-text {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+  font-weight: bold;
+}
