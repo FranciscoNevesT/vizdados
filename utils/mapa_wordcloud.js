@@ -6,6 +6,8 @@ const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
 
+const scale = document.getElementById("scale")
+
 //Read the data
 async function getKeywordData(state = 0) {
     const response = await fetch(`/data/keyword/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}`);
@@ -15,28 +17,36 @@ async function getKeywordData(state = 0) {
     return data;
   }
 
+var savedData = null
 
 async function drawWordCloud(id,data) {
+    if(data == null){
+      return
+    }
+    savedData = data
     // Cleanup to make room for the next cloud
     d3.select(id).selectAll('*').remove();
   
     // List of words
     var myWords = data;
-  
-    var numWords = 0;
 
-    for (let i in myWords) {
-      numWords += myWords[i].count;
-    }
-    
-    var maxSize = 0
-    for (let i in myWords) {
-      myWords[i].size = myWords[i].count / numWords;
-
-      if(maxSize < myWords[i].size){
-        maxSize = myWords[i].size
+    for (let i in myWords){
+      if(scale.value == "log"){
+        myWords[i].size = Math.log(myWords[i].count + 1)
+      }
+      else if(scale.value == "sqrt"){
+        myWords[i].size = Math.sqrt(myWords[i].count)
+      }
+      else{
+        myWords[i].size = myWords[i].count 
       }
     }
+
+    // Set the font size range for the words
+    var fontSize = d3.scaleLinear().range([10, 60]);
+
+    // Set the font size based on the frequency of each word
+    fontSize.domain([0, d3.max(myWords, function(d) { return d.size; })]);
   
     // Set the dimensions and margins of the graph
     var margin = { top: 10, right: 10, bottom: 10, left: 10 },
@@ -57,7 +67,7 @@ async function drawWordCloud(id,data) {
       .words(myWords.map(function (d) { return { text: d.word, size: d.size }; }))
       .padding(5) // Space between words
       .rotate(function () { return ~~(Math.random() * 2) * 90; })
-      .fontSize(function (d) { return 90*d.size/maxSize; }) // Adjust the scaling factor (50) as needed
+      .fontSize(function (d) { return fontSize(d.size)})
       .on("end", draw);
     layout.start();
   
@@ -84,5 +94,8 @@ async function drawWordCloud(id,data) {
 search.addEventListener("click", async () => {
     drawWordCloud("#wordcloud", await getKeywordData())
 });
+
+
+scale.addEventListener("change", async () => {drawWordCloud("#wordcloud", savedData)})
 
 export {getKeywordData, drawWordCloud};
