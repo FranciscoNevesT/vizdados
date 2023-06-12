@@ -92,38 +92,23 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
     var name = ['evaluation_area','knowledge_area','research_line','level']
     var name_s = ["e","k","r","l"]
 
-    var query =`SELECT s.name as state , COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion
-    FROM pos_doc as pd
-    INNER JOIN pos_doc_state as pds ON pd.id = pds.pos_doc_id
-    INNER JOIN state as s ON s.id = pds.state_id
-    `
+    var query = "SELECT state.name as state , COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n"
+    query += "FROM (SELECT * FROM pos_doc WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31') as pd\n"
+    query += "INNER JOIN pos_doc_state ON pd.id = pos_doc_state.pos_doc_id\n"    
+    query += "INNER JOIN state ON state.id = pos_doc_state.state_id"
     
-
-
     for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
             continue
         }
-        var pd_s = "pd" + name_s[i]
-        query += " INNER JOIN pos_doc_" + name[i] + " as " + pd_s + " ON pd.id = " + pd_s + ".pos_doc_id"
+        query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
         query += "\n"
-        query += " INNER JOIN " + name[i] + " as " + name_s[i] + " ON " + pd_s + "." + name[i] + "_id = " + name_s[i] + ".id" 
+        query += " INNER JOIN (SELECT * FROM " + name[i] + " WHERE " + name[i] + ".name = '" + values[i] + "') as " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
         query += "\n"
 
     }
 
-    query += " WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31'";
-
-    for(var i = 0; i < values.length; i++){
-        if(values[i] != 0){
-            query += "\n"
-            query += " AND " + name_s[i] + ".name = '" +  values[i] + "'"
-        }
-        
-    }
-    query += "\n"
-
-    query += " GROUP BY s.name"
+    query += " GROUP BY state.name"
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -167,9 +152,9 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
 
     var query = "SELECT " + tipoSelect + ".name as label, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n" 
 
-    query += "FROM pos_doc as pd\n"
-    query += "INNER JOIN pos_doc_" + tipoSelect + " on pos_doc_" + tipoSelect + ".pos_doc_id = pd.id\n"
-    query += "INNER JOIN " + tipoSelect + " on pos_doc_" + tipoSelect + "." + tipoSelect + "_id = " + tipoSelect + ".id\n"
+    query += "FROM (SELECT * FROM pos_doc WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31') as pd\n"
+    query += "INNER JOIN pos_doc_" + tipoSelect + " ON pos_doc_" + tipoSelect + ".pos_doc_id = pd.id\n"
+    query += "INNER JOIN (SELECT * FROM " + tipoSelect + " WHERE name != 'NAN') as " + tipoSelect + " ON pos_doc_" + tipoSelect + "." + tipoSelect + "_id = " + tipoSelect + ".id\n"
 
     for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
@@ -177,19 +162,7 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
         }
         query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
         query += "\n"
-        query += " INNER JOIN " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
-        query += "\n"
-
-    }
-
-
-    query += "WHERE pd.defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31' AND " + tipoSelect + ".name != 'NAN'\n";
-
-    for(var i = 0; i < values.length; i++){
-        if(values[i] == 0){
-            continue
-        }
-        query += " AND " + name[i] + ".name = '" + values[i] + "'"
+        query += " INNER JOIN (SELECT * FROM " + name[i] + " WHERE " + name[i] + ".name = '" + values[i] + "') as " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
         query += "\n"
 
     }

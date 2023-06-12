@@ -85,6 +85,4 @@ search.addEventListener("click", async () => {
     drawWordCloud("#wordcloud", await getKeywordData())
 });
 
-drawWordCloud("#wordcloud", await getKeywordData())
-
 export {getKeywordData, drawWordCloud};
