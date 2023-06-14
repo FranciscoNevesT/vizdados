@@ -63,8 +63,6 @@ async function apply_filter(){
   if(evaluation.value != 0 || knowledge.value != 0){
     fill(research,research_options)
   }
-
-
 }
 
 
@@ -74,6 +72,65 @@ research.addEventListener("input",apply_filter)
 
 
 apply_filter()
+
+//Instituição
+
+const institution = document.getElementById("artInstitution");
+
+fetch('/data/distinct/institution')
+  .then(response => response.json())
+  .then(data => {
+
+    var size = Object.keys(data).length
+
+    console.log(size)
+
+    for(let i = 0; i < size; i++){
+        const newOption = document.createElement('option');
+
+        newOption.value = data[i].name
+        newOption.textContent = data[i].name
+
+        institution.appendChild(newOption)
+    }   
+});
+
+//Orientador
+
+const advisor = document.getElementById("artAdvisor");
+
+async function apply_filter_advisor(){
+  advisor.innerHTML = "";
+  var option = document.createElement('option');
+  option.value = 0;
+  option.textContent = "ALL";
+  advisor.appendChild(option)
+
+  if(institution.value == 0 && institution.value == 0 && evaluation.value == 0 && knowledge.value == 0){
+    return
+  }
+
+  const data =  await (await fetch('/data/advisor/' + institution.value + '/' + evaluation.value + "/" + knowledge.value + "/" + research.value)).json()
+
+  var size = Object.keys(data).length
+
+  for(let i = 0; i < size; i++){
+      const newOption = document.createElement('option');
+
+      newOption.value = data[i].name
+      newOption.textContent = data[i].name
+
+      advisor.appendChild(newOption)
+    }
+  }
+
+
+
+institution.addEventListener("input",apply_filter_advisor)
+evaluation.addEventListener("input",apply_filter_advisor)
+knowledge.addEventListener("input",apply_filter_advisor)
+research.addEventListener("input",apply_filter_advisor)
+
 
 //Nivel
 
