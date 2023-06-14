@@ -65,45 +65,6 @@ mapaRouter.get('/data/distinct/:id', function(req, res, next){
 
     const query = "SELECT DISTINCT NAME FROM " + id + " ORDER BY name ASC "
 
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            res.json(rows);
-
-        }
-    });
-})
-
-// Pesquisa orientador 
-
-mapaRouter.get("/data/advisor/:institution/:evaluation/:knowledge/:research", function(req,res,next){
-
-    const institution  =req.params.institution
-    const eval = req.params.evaluation
-    const know = req.params.knowledge
-    const rese = req.params.research
-
-    var values = [institution,eval,know,rese]
-    var name = ['institution','evaluation_area','knowledge_area','research_line']
-
-    var query = "SELECT advisor.name\n"
-    query += "FROM pos_doc as pd\n"
-    query += "INNER JOIN pos_doc_advisor ON pd.id = pos_doc_advisor.pos_doc_id\n"    
-    query += "INNER JOIN advisor ON advisor.id = pos_doc_advisor.advisor_id"
-    
-    for(var i = 0; i < values.length; i++){
-        if(values[i] == 0){
-            continue
-        }
-        query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"
-        query += "\n"
-        query += " INNER JOIN (SELECT * FROM " + name[i] + " WHERE " + name[i] + ".name = '" + values[i] + "') as " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
-        query += "\n"
-
-    }
-
-    query += " GROUP BY advisor.name ORDER BY advisor.name"
 
     db.all(query, (err, rows) => {
         if (err) {
@@ -113,10 +74,6 @@ mapaRouter.get("/data/advisor/:institution/:evaluation/:knowledge/:research", fu
 
         }
     });
-
-    console.log(institution)
-
-
 })
 
 // Pesquisa generica
