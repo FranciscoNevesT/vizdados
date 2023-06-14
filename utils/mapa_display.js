@@ -47,7 +47,8 @@ info.update = function (props) {
 info.addTo(map);
 
 
-let geojson = null;
+var geojson = null;
+var verticalLines = null;
 
 var threshold = 1/10
 
@@ -79,6 +80,15 @@ function style(feature) {
       color: 'white',
       dashArray: '3',
       fillOpacity: 0.7
+  };
+}
+
+var line_lenght = 3
+function lineStyle (feature) {
+  return {
+    weight: 2,
+    opacity: 1,
+    color: 'black'
   };
 }
 
@@ -145,23 +155,54 @@ const updateMap = async () => {
       map.removeLayer(geojson);
     }
 
+    if (verticalLines) {
+      map.removeLayer(verticalLines);
+    }
+
     const response = await fetch(`/data/search/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}`);
     const data = await response.json();
     console.log(data)
     const brasilJson = await fetchBrasilJson();
 
+    // Create a GeoJSON layer for the color of the map
     const statesData = {"type":"FeatureCollection", "features": []};
+
+    // Create a GeoJSON layer for the vertical lines
+    var lineData = {
+      "type": "FeatureCollection",
+      "features": []
+    };
 
     for (let x = 0; x < 27; x++) {
       const stateSG = brasilJson.features[x].properties.shapeISO.split("-")[1];
 
       var zeroT = true
+
+      var rankpostion = 0
       for (const c in data) {
         const values = data[c];
+        rankpostion++
         if (stateSG == values.state) {
+
+          // Color map
           const entry = {"type":"Feature","id":x,"properties":{"name":stateSG,"count":values.count,"density":values.proportion},"geometry":brasilJson.features[x].geometry};
           statesData.features.push(entry);
           zeroT = false
+
+          // Line map
+          var angle = 45 + (rankpostion-1)*(90/26)
+          angle = angle *(Math.PI/180)
+
+          const center = L.geoJSON(brasilJson.features[x].geometry).getBounds().getCenter();
+          const lineFeature = {
+            "type": "Feature",
+            "properties":{"rank":rankpostion},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [[center.lng, center.lat], [center.lng + line_lenght * Math.cos(angle), center.lat + line_lenght * Math.sin(angle)]] // Adjust the vertical line length as needed
+            }
+          };
+          lineData.features.push(lineFeature);
           break;
         }
       }
@@ -169,6 +210,21 @@ const updateMap = async () => {
       if(zeroT){
         const entry = {"type":"Feature","id":x,"properties":{"name":stateSG,"count":0,"density":0},"geometry":brasilJson.features[x].geometry};
         statesData.features.push(entry);
+        rankpostion = 27
+        // Line map
+        var angle = 45 + (rankpostion-1)*(90/26)
+        angle = angle *(Math.PI/180)
+
+        const center = L.geoJSON(brasilJson.features[x].geometry).getBounds().getCenter();
+        const lineFeature = {
+          "type": "Feature",
+          "properties":{"rank":rankpostion},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [[center.lng, center.lat], [center.lng + line_lenght * Math.cos(angle), center.lat + line_lenght * Math.sin(angle)]] // Adjust the vertical line length as needed
+          }
+        };
+        lineData.features.push(lineFeature);
       }
     }
 
@@ -177,6 +233,12 @@ const updateMap = async () => {
       style : style,
       onEachFeature: onEachFeature
     }).addTo(map);
+
+    verticalLines = L.geoJson(lineData, {
+      style: lineStyle
+    }).addTo(map);
+
+
   } catch (error) {
     console.error(error);
   }

@@ -90,7 +90,6 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
 
     var values = [eval,know,rese,level]
     var name = ['evaluation_area','knowledge_area','research_line','level']
-    var name_s = ["e","k","r","l"]
 
     var query = "SELECT state.name as state , COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n"
     query += "FROM (SELECT * FROM pos_doc WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31') as pd\n"
@@ -108,7 +107,7 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
 
     }
 
-    query += " GROUP BY state.name"
+    query += " GROUP BY state.name ORDER BY count DESC"
 
     db.all(query, (err, rows) => {
         if (err) {
