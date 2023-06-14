@@ -8,7 +8,7 @@ const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
 
-const margin = {top: 30, right: 30, bottom: 50, left: 90};
+const margin = {top: 30, right: 30, bottom: 50, left: 100};
 const width = 460 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
@@ -91,7 +91,7 @@ async function drawRankChart(id, data) {
 
   const y = d3.scaleBand()
     .range([0, height])
-    .domain(data.map(d => d.label))
+    .domain(data.map(d => d.label.split(" ").slice(0,2).join(" ")))
     .padding(.1);
   svg.append("g")
     .call(d3.axisLeft(y))
@@ -137,7 +137,7 @@ async function drawRankChart(id, data) {
     .data(data)
     .join("rect")
     .attr("x", x(0))
-    .attr("y", d => y(d.label))
+    .attr("y", d => y(d.label.split(" ").slice(0,2).join(" ")))
     .attr("width", d => x(d.proportion))
     .attr("height", y.bandwidth())
     .style("stroke-width", 4)
