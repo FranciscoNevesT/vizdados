@@ -118,10 +118,15 @@ async function clickFeature(e) {
 
   const ieData = await getRankData("ie",state)
   const advisorData = await getRankData("advisor",state)
+  const evaluationData = await getRankData("evaluation_area",state)
+  const knowledgeData = await getRankData("knowledge_area",state)
   const lineData = await getLineData(state);
   const keywordData = await getKeywordData(state);
+  
   drawRankChart("#rank_ie", ieData);
   drawRankChart("#rank_advisor", advisorData);
+  drawRankChart("#rank_evaluation_area", evaluationData);
+  drawRankChart("#rank_knowledge_area", knowledgeData);
   drawLineChart("#line_chart", lineData);
   drawWordCloud("#wordcloud", keywordData);
 }

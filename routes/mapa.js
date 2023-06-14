@@ -146,7 +146,7 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     }else if(tipo == "advisor"){
         tipoSelect = "advisor"
     }else{
-        console.log("Erro: " + tipo)
+        tipoSelect = tipo
     }
 
     var query = "SELECT " + tipoSelect + ".name as label, COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n" 
@@ -156,7 +156,7 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
     query += "INNER JOIN (SELECT * FROM " + tipoSelect + " WHERE name != 'NAN') as " + tipoSelect + " ON pos_doc_" + tipoSelect + "." + tipoSelect + "_id = " + tipoSelect + ".id\n"
 
     for(var i = 0; i < values.length; i++){
-        if(values[i] == 0){
+        if(values[i] == 0 || name[i] == tipoSelect){
             continue
         }
         query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"

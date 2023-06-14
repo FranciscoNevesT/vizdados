@@ -49,6 +49,12 @@ async function drawRankChart(id, data) {
   else if(id == "#rank_advisor"){
     title += "orientadores"
   }
+  else if(id == "#rank_evaluation_area"){
+    title += "area de avaliação"
+  }
+  else if(id == "#rank_knowledge_area"){
+    title += "area de conhecimento"
+  }
   else{
     title += "estados"
   }
@@ -149,14 +155,18 @@ async function drawRankChart(id, data) {
 }
 
 search.addEventListener("click", async () => {
-  const [ieData, statesData,advisorData] = await Promise.all([
+  const [ieData, statesData,advisorData,evaluationData,knowledgeData] = await Promise.all([
     getRankData('ie'),
     getRankData('states'),
     getRankData('advisor'),
+    getRankData('evaluation_area'),
+    getRankData('knowledge_area'),
   ]);
   drawRankChart("#rank_ie", ieData);
   drawRankChart("#rank_states", statesData);
   drawRankChart("#rank_advisor", advisorData);
+  drawRankChart("#rank_evaluation_area", evaluationData);
+  drawRankChart("#rank_knowledge_area", knowledgeData);
 });
 
 
