@@ -78,15 +78,15 @@ mapaRouter.get('/data/distinct/:id', function(req, res, next){
 
 // Pesquisa generica
 
-mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end', function(req, res, next){
+mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end/:keywords', function(req, res, next){
     const eval = req.params.evaluation
     const know = req.params.knowledge
     const rese = req.params.research
     const level = req.params.level
+    const keywords = req.params.keywords
 
     const yearStart = req.params.start
     const yearEnd = req.params.end
-
 
     var values = [eval,know,rese,level]
     var name = ['evaluation_area','knowledge_area','research_line','level']
@@ -94,7 +94,7 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
     var query = "SELECT state.name as state , COUNT(*) as count, COUNT(*) * 1.0 / SUM(COUNT(*)) OVER() AS proportion\n"
     query += "FROM (SELECT * FROM pos_doc WHERE defense_date BETWEEN '" + yearStart + "/01/01' AND '" + yearEnd + "/12/31') as pd\n"
     query += "INNER JOIN pos_doc_state ON pd.id = pos_doc_state.pos_doc_id\n"    
-    query += "INNER JOIN state ON state.id = pos_doc_state.state_id"
+    query += "INNER JOIN state ON state.id = pos_doc_state.state_id\n"
     
     for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
@@ -105,6 +105,24 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
         query += " INNER JOIN (SELECT * FROM " + name[i] + " WHERE " + name[i] + ".name = '" + values[i] + "') as " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
         query += "\n"
 
+    }
+
+    if(keywords != "$"){
+        var keywords_list = keywords.split("_")
+        
+        var query_keyword = "SELECT DISTINCT pos_doc_id \nFROM pos_doc_keyword\nINNER JOIN keyword on pos_doc_keyword.keyword_id = keyword.id AND ("
+
+        for (k in keywords_list){
+            query_keyword += " keyword.name = '" + keywords_list[k] + "'"
+
+            if(k < keywords_list.length - 1){
+                query_keyword += " OR "
+            }
+        }
+
+        query_keyword += ")"
+
+        query += "INNER JOIN (" + query_keyword + ") as keyword on keyword.pos_doc_id = pd.id\n"
     }
 
     query += " GROUP BY state.name ORDER BY count DESC"
