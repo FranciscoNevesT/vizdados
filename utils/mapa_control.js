@@ -144,7 +144,7 @@ for(let i = 0; i < keywords_json.length; i++){
 }
 
 // Function to filter and display matching keywords
-function autocomplete(input) {
+function autocomplete() {
 
   suggestions.innerHTML = "";
 
@@ -173,7 +173,6 @@ function addKeyword(keyword) {
   var list = document.getElementById("selectedKeywords");
   var listItem = document.createElement("li");
   listItem.innerHTML = keyword;
-  listItem.value = keyword;
   listItem.addEventListener("click", function() {
     list.removeChild(listItem);
   });

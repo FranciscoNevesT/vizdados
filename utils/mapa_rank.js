@@ -7,16 +7,30 @@ const level = document.getElementById("artLevel");
 const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
+var selectedKeywords = document.getElementById("selectedKeywords");
 
 const margin = {top: 30, right: 30, bottom: 50, left: 100};
 const width = 460 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
 async function getRankData(tipo,state = 0) {
-  const response = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${tipo} `);
+
+  var keywords = selectedKeywords.getElementsByTagName("li")
+
+  var keyword_text = []
+  for (var i = 0; i < keywords.length; i++) {
+    var keyword = keywords[i].textContent;
+    keyword_text.push(keyword)
+  }
+
+  keyword_text = keyword_text.join("_")
+
+  if(keyword_text.length == 0){
+    keyword_text = "$"
+  }
+
+  const response = await fetch(`/data/rank/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${tipo}/${keyword_text}`);
   const data = await response.json();
-  console.log("oi")
-  console.log(data);
   return data;
 }
 

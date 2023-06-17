@@ -121,12 +121,13 @@ mapaRouter.get('/data/search/:evaluation/:knowledge/:research/:level/:start/:end
 
 //Pesquisa de rank
 
-mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:state/:tipo', function(req, res, next){
+mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:state/:tipo/:keywords', function(req, res, next){
     const eval = req.params.evaluation
     const know = req.params.knowledge
     const rese = req.params.research
     const level = req.params.level
     const state = req.params.state
+    const keywords = req.params.keywords
 
     const yearStart = req.params.start
     const yearEnd = req.params.end
@@ -164,6 +165,25 @@ mapaRouter.get('/data/rank/:evaluation/:knowledge/:research/:level/:start/:end/:
         query += " INNER JOIN (SELECT * FROM " + name[i] + " WHERE " + name[i] + ".name = '" + values[i] + "') as " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
         query += "\n"
 
+    }
+
+    
+    if(keywords != "$"){
+        var keywords_list = keywords.split("_")
+        
+        var query_keyword = "SELECT DISTINCT pos_doc_id \nFROM pos_doc_keyword\nINNER JOIN keyword on pos_doc_keyword.keyword_id = keyword.id AND ("
+
+        for (k in keywords_list){
+            query_keyword += " keyword.name = '" + keywords_list[k] + "'"
+
+            if(k < keywords_list.length - 1){
+                query_keyword += " OR "
+            }
+        }
+
+        query_keyword += ")"
+
+        query += "INNER JOIN (" + query_keyword + ") as keyword on keyword.pos_doc_id = pd.id\n"
     }
 
     query += " GROUP BY " + tipoSelect +  ".name ORDER BY count DESC LIMIT 10\n"
