@@ -135,18 +135,20 @@ async function update(){
 	const data = await getLineData();
 
 	if(relative_line.checked){
-	var pre = 0
-	for(let i = 0; i<data.length; i++){
-	  if(pre == 0){
-		  pre = data[i].count
-		  data[i].count = 0
-	  }
-	  else{
-	  var s = data[i].count
-	  data[i].count = s/pre
-	  pre = s}
-  
-	}}
+		var pre = 0
+		for(let i = 0; i<data.length; i++){
+			if(pre == 0){
+				pre = data[i].count
+				data[i].count = 0
+			}
+			else{
+			var s = data[i].count
+			data[i].count = s/pre
+			pre = s
+			}
+		
+		}
+	}	
 	console.log(data.length)
 	console.log(data[0])
 	console.log(data)

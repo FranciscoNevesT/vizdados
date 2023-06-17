@@ -130,10 +130,66 @@ endYear.addEventListener('input', function() {
 
 updateYearRange();
 
-var filterOptions = document.querySelector('.filter-options');
-var configOptions = document.querySelector('.config-options');
+/* Keywords selection */
+
+var suggestions = document.getElementById("suggestions");
+var keywordInput = document.getElementById("keywordInput")
+
+var keywords_json = await (await fetch('/data/distinct/keyword')).json()
+
+var keywords = []
+
+for(let i = 0; i < keywords_json.length; i++){
+  keywords.push(keywords_json[i].name)
+}
+
+// Function to filter and display matching keywords
+function autocomplete(input) {
+
+  suggestions.innerHTML = "";
+
+  if (keywordInput.value.length > 0) {
+    var matchingKeywords = keywords.filter(function(keyword) {
+      return keyword.toLowerCase().startsWith(keywordInput.value.toLowerCase());
+    });
+
+    matchingKeywords = matchingKeywords.slice(0, 10)
+
+    matchingKeywords.forEach(function(keyword) {
+      var suggestion = document.createElement("div");
+      suggestion.innerHTML = keyword;
+      suggestion.addEventListener("click", function() {
+        addKeyword(keyword);
+        keywordInput.value = "";
+        suggestions.innerHTML = "";
+      });
+      suggestions.appendChild(suggestion);
+    });
+  }
+}
+
+// Function to add selected keyword to the list
+function addKeyword(keyword) {
+  var list = document.getElementById("selectedKeywords");
+  var listItem = document.createElement("li");
+  listItem.innerHTML = keyword;
+  listItem.value = keyword;
+  listItem.addEventListener("click", function() {
+    list.removeChild(listItem);
+  });
+  list.appendChild(listItem);
+}
+
+
+
+keywordInput.addEventListener("keyup",async() => {
+  autocomplete()
+})
 
 /*Filter tab*/
+
+var filterOptions = document.querySelector('.filter-options');
+var configOptions = document.querySelector('.config-options');
 
 const filter_button = document.getElementById("tab_filter");
 
