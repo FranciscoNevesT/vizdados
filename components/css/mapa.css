@@ -233,9 +233,9 @@ input[type="checkbox"]:checked + label:before {
 }
 
 .scalebar {
-  position: absolute;
-  top: 370px;
-  left: 50px;
+  position: fixed;
+  top: 460px;
+  left: 280px;
   z-index: 9999;
   background-color: white;
   padding: 15px;

@@ -10,7 +10,7 @@ const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
 
 // set the dimensions and lineMargins of the graph
-const margin = {top: 10, right: 30, bottom: 30, left: 60},
+const margin = {top: 30, right: 30, bottom: 50, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -50,6 +50,15 @@ function drawLineChart(id, data) {
 		.range([ height, 0 ]);
 	svg.append("g")
 		.call(d3.axisLeft(y));
+
+  // title
+  svg.append("text")
+    .attr("x", (width/2))
+    .attr("y", 0 - (margin.top/2))
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .style("text-decoration", "underline")
+    .text("Total de publicações por ano");
 
 	// Add the line
 	svg.append("path")
