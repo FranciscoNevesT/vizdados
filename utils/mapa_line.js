@@ -51,14 +51,19 @@ function drawLineChart(id, data) {
 	svg.append("g")
 		.call(d3.axisLeft(y));
 
-  // title
+
+  //Adding title
   svg.append("text")
-    .attr("x", (width/2))
-    .attr("y", 0 - (margin.top/2))
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text("Total de publicações por ano");
+  .attr("class", "graph-title")
+  .attr("x", width / 2)
+  .attr("y", -margin.top / 2)
+  .attr("text-anchor", "middle")
+  .text("Total de publicações por ano");
+
+  svg.select(".graph-title")
+  .attr("font-size", "16px")
+  .attr("font-weight", "bold");
+
 
 	// Add the line
 	svg.append("path")
