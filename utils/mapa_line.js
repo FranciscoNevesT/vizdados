@@ -14,14 +14,24 @@ const margin = {top: 30, right: 30, bottom: 50, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
+function formatYearlyData(data) {
+  const yearlydata = {};
+  data.map((item) => {
+    if (Object.hasOwn(yearlydata, item.year)) {
+      yearlydata[item.year] += item.count;
+    } else {
+      yearlydata[item.year] = item.count;
+    }
+  );
+  return yearlydata;
+}
 //Read the data
 async function getLineData(state = 0) {
   const response = await fetch(`/data/line/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}`);
   const data = await response.json();
 	console.log('line data:\n\n');
   console.log(data);
-	// Parse data into line-able format
-  return data;
+  return formatYearlyData(data);
 }
 
 function drawLineChart(id, data) {
@@ -57,10 +67,10 @@ function drawLineChart(id, data) {
     .attr("y", 0 - (margin.top/2))
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .style("text-decoration", "underline")
+    .style("font-weight", "bold")
     .text("Total de publicações por ano");
 
-	// Add the line
+	// Add total data line
 	svg.append("path")
 		.datum(data)
 		.attr("fill", "none")
@@ -81,6 +91,7 @@ function drawLineChart(id, data) {
 	.attr("cy", d => y(d.count))
 	.attr("r", 4)
 	.on("mouseover", mouseover)
+  .on("mousemove", mousemove)
 	.on("mouseout", mouseleave);
 
 	// Function to show the tooltip
@@ -95,6 +106,14 @@ function drawLineChart(id, data) {
     .style("border-radius", "5px")
     .style("padding", "5px")
 
+  function mousemove(d) {
+    const dataD = d.srcElement.__data__
+    
+    Tooltip
+      .html("Número de publicacões: " + dataD.count)
+      .style("left", (d3.pointer(this)[0]+70) + "px")
+      .style("top", (d3.pointer(this)[1]) + "px")
+  }
 	function mouseover(d) {
 		Tooltip.style("opacity", 1);
 
