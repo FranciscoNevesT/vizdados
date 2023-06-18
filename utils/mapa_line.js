@@ -23,8 +23,9 @@ function formatYearlyData(data) {
       yearlydata[item.year] = item.count;
     }
   });
-  const yearlyarray = [];
-  for (year of yearlydata) {
+  console.log(yearlydata);
+  let yearlyarray = [];
+  for (let year in yearlydata) {
     yearlyarray.push({"year": year, "count": yearlydata[year]});
   }
   return yearlyarray;
