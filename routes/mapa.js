@@ -241,7 +241,7 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
 
 
     for(var i = 0; i < values.length; i++){
-        if(values[i] == 0){
+        if(values[i] == 0 || name[i] == "state"){
             continue
         }
         query += " INNER JOIN pos_doc_" + name[i] + " ON pos_doc_" + name[i] + ".pos_doc_id = pd.id"

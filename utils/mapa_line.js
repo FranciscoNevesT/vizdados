@@ -15,24 +15,46 @@ const margin = {top: 30, right: 30, bottom: 50, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-function formatYearlyData(data) {
+function formatYearlyData(data,tipo) {
   const yearlydata = {};
   data.map((item) => {
     if (Object.hasOwn(yearlydata, item.year)) {
-      yearlydata[item.year] += item.count;
+	  if(tipo == "all"){
+	    yearlydata[item.year] += item.count;
+	  }else if(tipo == "min"){
+		yearlydata[item.year] = Math.min(yearlydata[item.year],item.count);
+	  }else if(tipo == "max"){
+		yearlydata[item.year] = Math.max(yearlydata[item.year],item.count);
+	  }else if(tipo == "mean"){
+		yearlydata[item.year].push(item.count);
+	  }
+      
     } else {
-      yearlydata[item.year] = item.count;
+	  if(tipo == "mean"){
+		yearlydata[item.year] = [item.count];
+	  }else{
+		yearlydata[item.year] = item.count;
+	  }
+      
     }
   });
   console.log(yearlydata);
   let yearlyarray = [];
   for (let year in yearlydata) {
-    yearlyarray.push({"year": year, "count": yearlydata[year]});
+	if(tipo == "mean"){
+	  var sum = yearlydata[year].reduce((acc, num) => acc + num, 0);
+	  var mean = sum / yearlydata[year].length;
+	  yearlyarray.push({"year": year, "count": mean});  
+	}
+	else{
+	  yearlyarray.push({"year": year, "count": yearlydata[year]});
+	}
+    
   }
   return yearlyarray;
 }
 //Read the data
-async function getLineData(state = 0) {
+async function getLineData(state ) {
 
 	var keywords = selectedKeywords.getElementsByTagName("li")
 
@@ -50,9 +72,8 @@ async function getLineData(state = 0) {
 
   const response = await fetch(`/data/line/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${keyword_text}`);
   const data = await response.json();
-    console.log('line data:\n\n');
-  console.log(data);
-  return formatYearlyData(data);
+
+  return data
 }
 
 function drawLineChart(id, data) {
@@ -68,24 +89,37 @@ function drawLineChart(id, data) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // Add X axis --> it is a date format
-    var x = d3.scaleTime()
-    .domain(d3.extent(data, function(d) { return d.year; }))
-    .range([ 0, width ]);
+    var x = {}
+	
+	data.forEach((lineData,index) => {
+		x[index] = d3.scaleTime()
+		.domain(d3.extent(lineData, function(d) { return d.year; }))
+		.range([ 0, width ]);
+		
+	}) 
+	
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+        .call(d3.axisBottom(x[0]).tickFormat(d3.format("d")));
+
 
     // Add Y axis
-    var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return +d.count; })])
+    var y =  {}
+
+	data.forEach((lineData,index) => {
+		y[index] =  d3.scaleLinear()
+        .domain([0, d3.max(lineData, function(d) { return +d.count; })])
         .range([ height, 0 ]);
+	})
+	
+	
     svg.append("g")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y[0]));
 
 
   //Adding title
   svg.append("text")
-<<<<<<< HEAD
+
   .attr("class", "graph-title")
   .attr("x", width / 2)
   .attr("y", -margin.top / 2)
@@ -97,84 +131,38 @@ function drawLineChart(id, data) {
   .attr("font-weight", "bold");
 
     // Add total data line
-    svg.append("path")
-        .datum(data)
+	data.forEach((lineData,index) => {
+		svg.append("path")
+        .datum(lineData)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(function(d) { return x(d.year) })
-            .y(function(d) { return y(d.count) })
-            )   
+            .x(function(d) { return x[index](d.year) })
+            .y(function(d) { return y[index](d.count) })
+            ) 
+	})
 
-    // Draw the point bullets
-    svg.selectAll(".point")
-    .data(data)
-    .enter()
-    .append("circle")
-    .attr("class", "point")
-    .attr("cx", d => x(d.year))
-    .attr("cy", d => y(d.count))
-    .attr("r", 4)
-    .on("mouseover", mouseover)
-  .on("mousemove", mousemove)
-    .on("mouseout", mouseleave);
-
-    // Function to show the tooltip
-
-    var Tooltip = d3.select(id)
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-  function mousemove(d) {
-    const dataD = d.srcElement.__data__
-    
-    Tooltip
-      .html("Número de publicacões: " + dataD.count)
-      .style("left", (d3.pointer(this)[0]+70) + "px")
-      .style("top", (d3.pointer(this)[1]) + "px")
-  }
-    function mouseover(d) {
-        Tooltip.style("opacity", 1);
-
-        d3.select(this)
-          .style("stroke", "black")
-          .style("opacity", 1);
-      
-        const dataD = d.toElement.__data__;
-      
-        var value = dataD.count;
-      
-        if (relative_line.checked) {
-          value = (value * 100).toFixed(2);
-        }
-      
-        Tooltip
-          .html("Count: " + value)
-          .style("left", (d3.pointer(this)[0] + 70) + "px")
-          .style("top", (d3.pointer(this)[1] + margin.top + 10) + "px");
-    }
-
-    function mouseleave() {
-        Tooltip
-        .style("opacity", 0)
-      d3.select(this)
-        .style("stroke", "none")
-        .style("opacity", 0.8)
-    }
 
 }
 
-async function update(){
-    const data = await getLineData();
+var data_r = null
 
-<<<<<<< HEAD
+async function update(state = 0,clean = true){
+
+	var data = null
+
+	if(clean){
+		data = await getLineData(state);
+		data_r = JSON.parse(JSON.stringify(data));
+	}else{
+		data = JSON.parse(JSON.stringify(data_r));
+	}
+
+	if(data == null){
+		return 
+	}
+
 	if(relative_line.checked){
 		var pre = 0
 		for(let i = 0; i<data.length; i++){
@@ -190,39 +178,36 @@ async function update(){
 		
 		}
 	}	
+
+	if(mmm_line.checked){
+		var datas = [formatYearlyData(data,"max"),formatYearlyData(data,"mean"),formatYearlyData(data,"min")]
+	}else{
+		var datas = [formatYearlyData(data,"all")]
+	}
+
+	
+
 	console.log(data.length)
 	console.log(data[0])
 	console.log(data)
-	drawLineChart("#line_chart", data);
-=======
-    if(relative_line.checked){
-    var pre = 0
-    for(let i = 0; i<data.length; i++){
-      if(pre == 0){
-          pre = data[i].count
-          data[i].count = 0
-      }
-      else{
-      var s = data[i].count
-      data[i].count = s/pre
-      pre = s}
-  
-    }}
-    console.log(data.length)
-    console.log(data[0])
-    console.log(data)
-    drawLineChart("#line_chart", data);
->>>>>>> diff-line
+	drawLineChart("#line_chart", datas);
 }
 
 const relative_line = document.getElementById("relative_line")
+const mmm_line = document.getElementById("mmm_line")
 
 search.addEventListener("click", async () => {
     update()
 });
 
 relative_line.addEventListener("click", async () => {
-    update()
+    update(0, false)
 });
 
-export {getLineData, drawLineChart};
+
+mmm_line.addEventListener("click", async () => {
+    update(0, false)
+});
+
+
+export {getLineData,update, drawLineChart};

@@ -1,5 +1,5 @@
 import {getRankData,drawRankChart} from './mapa_rank.js';
-import {getLineData,drawLineChart} from './mapa_line.js';
+import {getLineData,update,drawLineChart} from './mapa_line.js';
 import {getKeywordData, drawWordCloud} from './mapa_wordcloud.js';
 
 //Fazendo o mapa
@@ -121,15 +121,15 @@ async function clickFeature(e) {
   const advisorData = await getRankData("advisor",state)
   const evaluationData = await getRankData("evaluation_area",state)
   const knowledgeData = await getRankData("knowledge_area",state)
-  const lineData = await getLineData(state);
   const keywordData = await getKeywordData(state);
   
   drawRankChart("#rank_ie", ieData);
   drawRankChart("#rank_advisor", advisorData);
   drawRankChart("#rank_evaluation_area", evaluationData);
   drawRankChart("#rank_knowledge_area", knowledgeData);
-  drawLineChart("#line_chart", lineData);
   drawWordCloud("#wordcloud", keywordData);
+
+  update(state)
 }
 
 
