@@ -1,0 +1,17 @@
+Integrantes:
+    - Francisco Neves   20
+    - Henrique Furst    2017014898
+
+Contribuições:
+A idealização do projeto, incluindo a sua disponibilização (formato web), as
+vizualizações presentes (mapa, rankings, gráfico de linha) e o tema do trabalho
+foram elaboradas e acordadas por ambos integrantes.
+
+Henrique Furst: Criação do gráfico de linha, ajustes nos componentes de controle
+das vizualizações e remoção de erros. Edição da proposta textual do trabalho.
+Gravação e edição da apresentação parcial do trabalho em formato de vídeo.
+
+Francisco Neves: Criação dos gráficos de mapa, ranking e wordcloud.
+Estabelecimento da arquitetura do programa, organizando a base de código onde se
+dividem a lógica de servidor e de front-end (ambos em javascript). Organização e
+melhoria da base de dados
