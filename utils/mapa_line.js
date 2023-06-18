@@ -42,7 +42,12 @@ function formatYearlyData(data,tipo) {
   let yearlyarray = [];
   for (let year in yearlydata) {
 	if(tipo == "mean"){
-	  var sum = yearlydata[year].reduce((acc, num) => acc + num, 0);
+
+	  var sum = 0
+
+	  for(let i = 0; i < yearlydata[year].length; i++){
+		sum += yearlydata[year][i]
+	  }
 	  var mean = sum / yearlydata[year].length;
 	  yearlyarray.push({"year": year, "count": mean});  
 	}
@@ -89,32 +94,22 @@ function drawLineChart(id, data) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // Add X axis --> it is a date format
-    var x = {}
-	
-	data.forEach((lineData,index) => {
-		x[index] = d3.scaleTime()
-		.domain(d3.extent(lineData, function(d) { return d.year; }))
-		.range([ 0, width ]);
-		
-	}) 
+    var x = d3.scaleTime()
+	.domain(d3.extent(data[0], function(d) { return d.year; }))
+	.range([ 0, width ]); {}
 	
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x[0]).tickFormat(d3.format("d")));
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
 
     // Add Y axis
-    var y =  {}
-
-	data.forEach((lineData,index) => {
-		y[index] =  d3.scaleLinear()
-        .domain([0, d3.max(lineData, function(d) { return +d.count; })])
-        .range([ height, 0 ]);
-	})
-	
+    var y =  d3.scaleLinear()
+	.domain([0, d3.max(data[0], function(d) { return +d.count; })])
+	.range([ height, 0 ]);
 	
     svg.append("g")
-        .call(d3.axisLeft(y[0]));
+        .call(d3.axisLeft(y));
 
 
   //Adding title
@@ -130,18 +125,23 @@ function drawLineChart(id, data) {
   .attr("font-size", "16px")
   .attr("font-weight", "bold");
 
+    // Define color scale for lines
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
     // Add total data line
 	data.forEach((lineData,index) => {
 		svg.append("path")
         .datum(lineData)
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+		.style("stroke", colorScale(index))
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(function(d) { return x[index](d.year) })
-            .y(function(d) { return y[index](d.count) })
+            .x(function(d) { return x(d.year) })
+            .y(function(d) { return y(d.count) })
             ) 
 	})
+
+	
 
 
 }
