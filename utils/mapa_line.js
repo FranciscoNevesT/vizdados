@@ -8,6 +8,7 @@ const level = document.getElementById("artLevel");
 const startYear = document.getElementById('start-year');
 const endYear = document.getElementById('end-year');
 const search = document.getElementById("search");
+const selectedKeywords = document.getElementById("selectedKeywords");
 
 // set the dimensions and lineMargins of the graph
 const margin = {top: 30, right: 30, bottom: 50, left: 60},
@@ -16,7 +17,22 @@ const margin = {top: 30, right: 30, bottom: 50, left: 60},
 
 //Read the data
 async function getLineData(state = 0) {
-  const response = await fetch(`/data/line/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}`);
+
+	var keywords = selectedKeywords.getElementsByTagName("li")
+
+	var keyword_text = []
+	for (var i = 0; i < keywords.length; i++) {
+		var keyword = keywords[i].textContent;
+		keyword_text.push(keyword)
+	}
+
+	keyword_text = keyword_text.join("_")
+
+	if(keyword_text.length == 0){
+		keyword_text = "$"
+	}
+
+  const response = await fetch(`/data/line/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${keyword_text}`);
   const data = await response.json();
 	console.log('line data:\n\n');
   console.log(data);
