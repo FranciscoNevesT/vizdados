@@ -15,6 +15,22 @@ const margin = {top: 30, right: 30, bottom: 50, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
+function formatYearlyData(data) {
+  const yearlydata = {};
+  data.map((item) => {
+    if (Object.hasOwn(yearlydata, item.year)) {
+      yearlydata[item.year] += item.count;
+    } else {
+      yearlydata[item.year] = item.count;
+    }
+  });
+  console.log(yearlydata);
+  let yearlyarray = [];
+  for (let year in yearlydata) {
+    yearlyarray.push({"year": year, "count": yearlydata[year]});
+  }
+  return yearlyarray;
+}
 //Read the data
 async function getLineData(state = 0) {
 
@@ -34,10 +50,9 @@ async function getLineData(state = 0) {
 
   const response = await fetch(`/data/line/${evaluation.value}/${knowledge.value}/${research.value}/${level.value}/${startYear.value}/${endYear.value}/${state}/${keyword_text}`);
   const data = await response.json();
-	console.log('line data:\n\n');
+    console.log('line data:\n\n');
   console.log(data);
-	// Parse data into line-able format
-  return data;
+  return formatYearlyData(data);
 }
 
 function drawLineChart(id, data) {
@@ -53,23 +68,24 @@ function drawLineChart(id, data) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // Add X axis --> it is a date format
-	var x = d3.scaleTime()
+    var x = d3.scaleTime()
     .domain(d3.extent(data, function(d) { return d.year; }))
     .range([ 0, width ]);
-	svg.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x).tickFormat(d3.format("d")));
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
-	// Add Y axis
-	var y = d3.scaleLinear()
-		.domain([0, d3.max(data, function(d) { return +d.count; })])
-		.range([ height, 0 ]);
-	svg.append("g")
-		.call(d3.axisLeft(y));
+    // Add Y axis
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return +d.count; })])
+        .range([ height, 0 ]);
+    svg.append("g")
+        .call(d3.axisLeft(y));
 
 
   //Adding title
   svg.append("text")
+<<<<<<< HEAD
   .attr("class", "graph-title")
   .attr("x", width / 2)
   .attr("y", -margin.top / 2)
@@ -80,33 +96,33 @@ function drawLineChart(id, data) {
   .attr("font-size", "16px")
   .attr("font-weight", "bold");
 
+    // Add total data line
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function(d) { return x(d.year) })
+            .y(function(d) { return y(d.count) })
+            )   
 
-	// Add the line
-	svg.append("path")
-		.datum(data)
-		.attr("fill", "none")
-		.attr("stroke", "steelblue")
-		.attr("stroke-width", 1.5)
-		.attr("d", d3.line()
-			.x(function(d) { return x(d.year) })
-			.y(function(d) { return y(d.count) })
-			)   
+    // Draw the point bullets
+    svg.selectAll(".point")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "point")
+    .attr("cx", d => x(d.year))
+    .attr("cy", d => y(d.count))
+    .attr("r", 4)
+    .on("mouseover", mouseover)
+  .on("mousemove", mousemove)
+    .on("mouseout", mouseleave);
 
-	// Draw the point bullets
-	svg.selectAll(".point")
-	.data(data)
-	.enter()
-	.append("circle")
-	.attr("class", "point")
-	.attr("cx", d => x(d.year))
-	.attr("cy", d => y(d.count))
-	.attr("r", 4)
-	.on("mouseover", mouseover)
-	.on("mouseout", mouseleave);
+    // Function to show the tooltip
 
-	// Function to show the tooltip
-
-	var Tooltip = d3.select(id)
+    var Tooltip = d3.select(id)
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")
@@ -116,40 +132,49 @@ function drawLineChart(id, data) {
     .style("border-radius", "5px")
     .style("padding", "5px")
 
-	function mouseover(d) {
-		Tooltip.style("opacity", 1);
+  function mousemove(d) {
+    const dataD = d.srcElement.__data__
+    
+    Tooltip
+      .html("Número de publicacões: " + dataD.count)
+      .style("left", (d3.pointer(this)[0]+70) + "px")
+      .style("top", (d3.pointer(this)[1]) + "px")
+  }
+    function mouseover(d) {
+        Tooltip.style("opacity", 1);
 
-		d3.select(this)
-		  .style("stroke", "black")
-		  .style("opacity", 1);
-	  
-		const dataD = d.toElement.__data__;
-	  
-		var value = dataD.count;
-	  
-		if (relative_line.checked) {
-		  value = (value * 100).toFixed(2);
-		}
-	  
-		Tooltip
-		  .html("Count: " + value)
-		  .style("left", (d3.pointer(this)[0] + 70) + "px")
-		  .style("top", (d3.pointer(this)[1] + margin.top + 10) + "px");
-	}
+        d3.select(this)
+          .style("stroke", "black")
+          .style("opacity", 1);
+      
+        const dataD = d.toElement.__data__;
+      
+        var value = dataD.count;
+      
+        if (relative_line.checked) {
+          value = (value * 100).toFixed(2);
+        }
+      
+        Tooltip
+          .html("Count: " + value)
+          .style("left", (d3.pointer(this)[0] + 70) + "px")
+          .style("top", (d3.pointer(this)[1] + margin.top + 10) + "px");
+    }
 
-	function mouseleave() {
-		Tooltip
-		.style("opacity", 0)
-	  d3.select(this)
-		.style("stroke", "none")
-		.style("opacity", 0.8)
-	}
+    function mouseleave() {
+        Tooltip
+        .style("opacity", 0)
+      d3.select(this)
+        .style("stroke", "none")
+        .style("opacity", 0.8)
+    }
 
 }
 
 async function update(){
-	const data = await getLineData();
+    const data = await getLineData();
 
+<<<<<<< HEAD
 	if(relative_line.checked){
 		var pre = 0
 		for(let i = 0; i<data.length; i++){
@@ -169,16 +194,35 @@ async function update(){
 	console.log(data[0])
 	console.log(data)
 	drawLineChart("#line_chart", data);
+=======
+    if(relative_line.checked){
+    var pre = 0
+    for(let i = 0; i<data.length; i++){
+      if(pre == 0){
+          pre = data[i].count
+          data[i].count = 0
+      }
+      else{
+      var s = data[i].count
+      data[i].count = s/pre
+      pre = s}
+  
+    }}
+    console.log(data.length)
+    console.log(data[0])
+    console.log(data)
+    drawLineChart("#line_chart", data);
+>>>>>>> diff-line
 }
 
 const relative_line = document.getElementById("relative_line")
 
 search.addEventListener("click", async () => {
-	update()
+    update()
 });
 
 relative_line.addEventListener("click", async () => {
-	update()
+    update()
 });
 
 export {getLineData, drawLineChart};

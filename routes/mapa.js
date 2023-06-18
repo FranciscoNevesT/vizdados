@@ -234,8 +234,11 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
     const values = [eval,know,rese,level,state];
     const name = ['evaluation_area','knowledge_area','research_line','level','state'];
 
-    var query = "SELECT year , COUNT(*) as count\n"
+    var query = "SELECT year , COUNT(*) as count, state.name as state\n"
     query += "FROM pos_doc as pd\n"
+    query += "INNER JOIN pos_doc_state ON pos_doc_state.pos_doc_id = pd.id\n"
+    query += "INNER JOIN (SELECT * FROM state WHERE name != 'NAN') as state ON pos_doc_state.state_id = state.id\n"
+
 
     for(var i = 0; i < values.length; i++){
         if(values[i] == 0){
@@ -245,7 +248,6 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
         query += "\n"
         query += " INNER JOIN " + name[i] + " ON pos_doc_" + name[i]  + "." + name[i] + "_id = " + name[i] + ".id" 
         query += "\n"
-
     }
 
     if(keywords != "$"){
@@ -279,9 +281,7 @@ mapaRouter.get('/data/line/:evaluation/:knowledge/:research/:level/:start/:end/:
     }
 
 
-
-
-    query = query + " GROUP BY year ORDER BY year ASC"
+    query = query + " GROUP BY year, state ORDER BY year ASC"
 
     console.log(query)
     db.all(query, (err, rows) => {
