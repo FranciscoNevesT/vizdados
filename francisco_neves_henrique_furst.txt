@@ -15,3 +15,15 @@ Francisco Neves: Criação dos gráficos de mapa, ranking e wordcloud.
 Estabelecimento da arquitetura do programa, organizando a base de código onde se
 dividem a lógica de servidor e de front-end (ambos em javascript). Organização e
 melhoria da base de dados
+
+link para ferramenta:
+https://github.com/FranciscoNevesT/vizdados
+
+Pré-requisitos:
+NodeJS, NPM instalados
+Instruções para a vizualização:
+1. Criar diretório "sql" na pasta raiz do projeto. Baixar arquivo "pos_doc.db" da
+pasta disponível em :
+https://drive.google.com/drive/folders/10a4_1Fs29eRo8cty0PoaZ_W2Lo5fx7LC?usp=drive_link
+2. Executar os comandos "npm install" e "npm start"
+3. Acessar a vizualização no endereço "localhost:3000"
