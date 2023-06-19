@@ -79,14 +79,19 @@
     <div class="config-tab">
       <button class="tab-button" id="tab_config">Configuração</button>
       <div class="config-options">
-        <input type="checkbox" id="relative_line">
-        <label for="relative_line">Linha Relativa</label>
-        
-        <input type="checkbox" id="mmm_line">
-        <label for="mmm_line">Linha de min/media/max</label>
-
+        <div class="container" id="line-config">
+          <p>Gráfico de linha (Publicações por ano):</p>
+          <input type="checkbox" id="relative_line">
+          <label for="relative_line">Linha Relativa (taxa de crescimento em %)</label>
+          
+          <input type="checkbox" id="mmm_line">
+          <label for="mmm_line">
+              Linhas de Maior/Média/Menor número de publicações por estado
+          </label>
+        </div>
         <div class="container">
           <div class="input-group">
+            <p>Wordcloud:</p>
             <label class="input-group-label" for="scale">Escala da wordcloud:</label>
             <select class="custom-select" id="scale">
               <option value="n">n</option>

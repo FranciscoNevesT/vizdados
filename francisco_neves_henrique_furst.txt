@@ -1,5 +1,5 @@
 Integrantes:
-    - Francisco Neves   20
+    - Francisco Neves   2019006604
     - Henrique Furst    2017014898
 
 Contribuições:
@@ -8,22 +8,28 @@ vizualizações presentes (mapa, rankings, gráfico de linha) e o tema do trabal
 foram elaboradas e acordadas por ambos integrantes.
 
 Henrique Furst: Criação do gráfico de linha, ajustes nos componentes de controle
-das vizualizações e remoção de erros. Edição da proposta textual do trabalho.
-Gravação e edição da apresentação parcial do trabalho em formato de vídeo.
+das vizualizações e remoção de erros. Verificação de consistência dos dados,
+correções de experiência de usuário. Estruturação vizual do mapa. Edição da
+proposta textual do trabalho. Gravação e edição da apresentação parcial do
+trabalho em formato de vídeo.
 
 Francisco Neves: Criação dos gráficos de mapa, ranking e wordcloud.
-Estabelecimento da arquitetura do programa, organizando a base de código onde se
-dividem a lógica de servidor e de front-end (ambos em javascript). Organização e
-melhoria da base de dados
+Estabelecimento da arquitetura do programa, estabelecendo a base de código onde se
+dividem a lógica de servidor e de front-end (ambos em javascript). Limpeza dos
+dados e estruturação do banco relacional.
 
 link para ferramenta:
 https://github.com/FranciscoNevesT/vizdados
 
 Pré-requisitos:
-NodeJS, NPM instalados
+NodeJS, NPM instalados, acesso à internet
 Instruções para a vizualização:
 1. Criar diretório "sql" na pasta raiz do projeto. Baixar arquivo "pos_doc.db" da
 pasta disponível em :
 https://drive.google.com/drive/folders/10a4_1Fs29eRo8cty0PoaZ_W2Lo5fx7LC?usp=drive_link
-2. Executar os comandos "npm install" e "npm start"
+2. Executar os comandos "npm install" e "npm start" dentro do diretório raiz do
+projeto
 3. Acessar a vizualização no endereço "localhost:3000"
+Observa-se que a renderização de todas as vizualizações pode demorar. É
+contraindicado clicar no botão de pesquisa repetidamente, uma vez que o servidor
+tentará renderizar todas as pesquisas novamente.
