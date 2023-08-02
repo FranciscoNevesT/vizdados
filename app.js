@@ -1,4 +1,4 @@
-//Configurações do servidor
+// Configurações do servidor
 const fs = require('fs');
 
 const express = require('express');

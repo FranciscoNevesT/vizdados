@@ -5,7 +5,7 @@ Integrantes:
 Contribuições:
 A idealização do projeto, incluindo a sua disponibilização (formato web), as
 vizualizações presentes (mapa, rankings, gráfico de linha) e o tema do trabalho
-foram elaboradas e acordadas por ambos integrantes
+foram elaboradas e acordadas por ambos integrantes.
 
 Henrique Furst: Criação do gráfico de linha, ajustes nos componentes de controle
 das vizualizações e remoção de erros. Verificação de consistência dos dados,
